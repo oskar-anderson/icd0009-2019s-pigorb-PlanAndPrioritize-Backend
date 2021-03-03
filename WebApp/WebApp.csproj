@@ -19,4 +19,21 @@
       <ProjectReference Include="..\DAL.App.EF\DAL.App.EF.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\SubTasks\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\SubTasks\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\SubTasks\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\SubTasks\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\SubTasks\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Features\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Features\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Features\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Features\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Features\Index.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="ApiControllers" />
+    </ItemGroup>
+
 </Project>

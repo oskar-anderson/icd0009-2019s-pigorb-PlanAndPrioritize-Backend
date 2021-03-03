@@ -23,14 +23,34 @@ Remove cascade delete
 Install Microsoft.VisualStudio.Web.CodeGeneration.Design to WebApp
 MVC Web controllers (run inside WebApp)
 ~~~
-dotnet aspnet-codegenerator controller -name FeaturesController        -actions -m  Feature        -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
-dotnet aspnet-codegenerator controller -name SubTasksController        -actions -m  SubTask        -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
+dotnet aspnet-codegenerator controller -name AppRolesController                  -actions -m  AppRole                -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
+dotnet aspnet-codegenerator controller -name AppUsersController                  -actions -m  AppUser                -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
+dotnet aspnet-codegenerator controller -name CategoriesController                -actions -m  Category               -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
+dotnet aspnet-codegenerator controller -name CommentsController                  -actions -m  Comment                -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
+dotnet aspnet-codegenerator controller -name FeaturesController                  -actions -m  Feature                -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
+dotnet aspnet-codegenerator controller -name FeatureInVotingsController          -actions -m  FeatureInVoting        -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
+dotnet aspnet-codegenerator controller -name FeatureStatusesController           -actions -m  FeatureStatus          -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
+dotnet aspnet-codegenerator controller -name VotingsController                   -actions -m  Voting                 -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
+dotnet aspnet-codegenerator controller -name VotingStatusesController            -actions -m  VotingStatus           -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
+dotnet aspnet-codegenerator controller -name UserInVotingsController             -actions -m  UserInVoting           -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
+dotnet aspnet-codegenerator controller -name UsersFeaturePrioritiesController    -actions -m  UsersFeaturePriority   -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
+dotnet aspnet-codegenerator controller -name PriorityStatusesController          -actions -m  PriorityStatus         -dc AppDbContext -outDir Controllers --useDefaultLayout --useAsyncActions --referenceScriptLibraries -f
 ~~~
 
 Api controllers
 ~~~
-dotnet aspnet-codegenerator controller -name FeaturesController     -m Feature     -actions -dc AppDbContext -outDir ApiControllers -api --useAsyncActions  -f
-dotnet aspnet-codegenerator controller -name SubTasksController     -m SubTask     -actions -dc AppDbContext -outDir ApiControllers -api --useAsyncActions  -f
+dotnet aspnet-codegenerator controller -name AppRolesController                     -m AppRole                     -actions -dc AppDbContext -outDir ApiControllers -api --useAsyncActions  -f
+dotnet aspnet-codegenerator controller -name AppUsersController                     -m AppUser                     -actions -dc AppDbContext -outDir ApiControllers -api --useAsyncActions  -f
+dotnet aspnet-codegenerator controller -name CategoriesController                   -m Category                    -actions -dc AppDbContext -outDir ApiControllers -api --useAsyncActions  -f
+dotnet aspnet-codegenerator controller -name CommentsController                     -m Comment                     -actions -dc AppDbContext -outDir ApiControllers -api --useAsyncActions  -f
+dotnet aspnet-codegenerator controller -name FeaturesController                     -m Feature                     -actions -dc AppDbContext -outDir ApiControllers -api --useAsyncActions  -f
+dotnet aspnet-codegenerator controller -name FeatureInVotingsController             -m FeatureInVoting             -actions -dc AppDbContext -outDir ApiControllers -api --useAsyncActions  -f
+dotnet aspnet-codegenerator controller -name FeatureStatusesController              -m FeatureStatus               -actions -dc AppDbContext -outDir ApiControllers -api --useAsyncActions  -f
+dotnet aspnet-codegenerator controller -name VotingsController                      -m Voting                      -actions -dc AppDbContext -outDir ApiControllers -api --useAsyncActions  -f
+dotnet aspnet-codegenerator controller -name VotingStatusesController               -m VotingStatus                -actions -dc AppDbContext -outDir ApiControllers -api --useAsyncActions  -f
+dotnet aspnet-codegenerator controller -name UserInVotingsController                -m UserInVoting                -actions -dc AppDbContext -outDir ApiControllers -api --useAsyncActions  -f
+dotnet aspnet-codegenerator controller -name UsersFeaturePrioritiesController       -m UsersFeaturePriority        -actions -dc AppDbContext -outDir ApiControllers -api --useAsyncActions  -f
+dotnet aspnet-codegenerator controller -name PriorityStatusesController             -m PriorityStatus              -actions -dc AppDbContext -outDir ApiControllers -api --useAsyncActions  -f
 ~~~
 
 Solve the scaffolding problems on Ubuntu.

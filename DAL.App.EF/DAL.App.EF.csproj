@@ -5,13 +5,19 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="ee.itcollege.pigorb.bookswap.DAL.Base.EF" Version="1.0.0" />
       <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.2" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.2" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.2" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Contracts.DAL.App\Contracts.DAL.App.csproj" />
       <ProjectReference Include="..\Domain\Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Repositories" />
     </ItemGroup>
 
 </Project>

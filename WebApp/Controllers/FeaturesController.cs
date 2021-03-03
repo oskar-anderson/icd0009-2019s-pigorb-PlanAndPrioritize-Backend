@@ -22,7 +22,8 @@ namespace WebApp.Controllers
         // GET: Features
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Features.ToListAsync());
+            var appDbContext = _context.Features.Include(f => f.AppUser).Include(f => f.Category).Include(f => f.FeatureStatus);
+            return View(await appDbContext.ToListAsync());
         }
 
         // GET: Features/Details/5
@@ -34,6 +35,9 @@ namespace WebApp.Controllers
             }
 
             var feature = await _context.Features
+                .Include(f => f.AppUser)
+                .Include(f => f.Category)
+                .Include(f => f.FeatureStatus)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (feature == null)
             {
@@ -46,6 +50,9 @@ namespace WebApp.Controllers
         // GET: Features/Create
         public IActionResult Create()
         {
+            ViewData["AppUserId"] = new SelectList(_context.AppUsers, "Id", "FirstName");
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Title");
+            ViewData["FeatureStatusId"] = new SelectList(_context.FeatureStatuses, "Id", "Name");
             return View();
         }
 
@@ -54,7 +61,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Heading,Description")] Feature feature)
+        public async Task<IActionResult> Create([Bind("Id,Title,Size,PriorityValue,Description,StartTime,EndTime,Duration,CategoryId,FeatureStatusId,AppUserId,TimeCreated,LastEdited,ChangeLog")] Feature feature)
         {
             if (ModelState.IsValid)
             {
@@ -63,6 +70,9 @@ namespace WebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["AppUserId"] = new SelectList(_context.AppUsers, "Id", "FirstName", feature.AppUserId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Title", feature.CategoryId);
+            ViewData["FeatureStatusId"] = new SelectList(_context.FeatureStatuses, "Id", "Name", feature.FeatureStatusId);
             return View(feature);
         }
 
@@ -79,6 +89,9 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
+            ViewData["AppUserId"] = new SelectList(_context.AppUsers, "Id", "FirstName", feature.AppUserId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Title", feature.CategoryId);
+            ViewData["FeatureStatusId"] = new SelectList(_context.FeatureStatuses, "Id", "Name", feature.FeatureStatusId);
             return View(feature);
         }
 
@@ -87,7 +100,7 @@ namespace WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Heading,Description")] Feature feature)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Title,Size,PriorityValue,Description,StartTime,EndTime,Duration,CategoryId,FeatureStatusId,AppUserId,TimeCreated,LastEdited,ChangeLog")] Feature feature)
         {
             if (id != feature.Id)
             {
@@ -114,6 +127,9 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["AppUserId"] = new SelectList(_context.AppUsers, "Id", "FirstName", feature.AppUserId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Title", feature.CategoryId);
+            ViewData["FeatureStatusId"] = new SelectList(_context.FeatureStatuses, "Id", "Name", feature.FeatureStatusId);
             return View(feature);
         }
 
@@ -126,6 +142,9 @@ namespace WebApp.Controllers
             }
 
             var feature = await _context.Features
+                .Include(f => f.AppUser)
+                .Include(f => f.Category)
+                .Include(f => f.FeatureStatus)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (feature == null)
             {

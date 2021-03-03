@@ -8,12 +8,41 @@ namespace Domain
     {
         public Guid Id { get; set; }
 
-        [MaxLength(64)]
-        public string Heading { get; set; } = default!;
+        public string Title { get; set; } = default!;
+        
+        public int Size { get; set; }
 
-        [MaxLength(256)]
-        public string Description { get; set; } = default!;
+        public decimal PriorityValue { get; set; }
 
-        public ICollection<SubTask>? SubTasks { get; set; }
+        public string? Description { get; set; }
+
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime StartTime { get; set; }
+        
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime EndTime { get; set; }
+
+        public int Duration { get; set; }
+
+        public Guid? CategoryId { get; set; }
+        public Category? Category { get; set; }
+        
+        public Guid FeatureStatusId { get; set; }
+        public FeatureStatus? FeatureStatus { get; set; }
+        
+        public Guid? AppUserId { get; set; }
+        public AppUser? AppUser { get; set; }
+
+        public DateTime TimeCreated { get; set; }
+        
+        public DateTime LastEdited { get; set; }
+
+        public string? ChangeLog { get; set; }
+
+        public ICollection<Comment>? Comments { get; set; }
+        
+        public ICollection<FeatureInVoting>? FeatureInVotings { get; set; }
     }
 }
