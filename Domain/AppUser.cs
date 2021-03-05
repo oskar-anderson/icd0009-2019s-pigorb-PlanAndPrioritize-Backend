@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
 using Microsoft.AspNetCore.Identity;
 
 namespace Domain
 {
-    public class AppUser : IdentityUser<Guid>
+    public class AppUser : IdentityUser<Guid>, IDomainBaseEntity<Guid>
     {
         public string FirstName { get; set; } = default!;
         

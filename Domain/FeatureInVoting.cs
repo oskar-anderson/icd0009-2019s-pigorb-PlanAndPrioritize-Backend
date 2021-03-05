@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
 
 namespace Domain
 {
-    public class FeatureInVoting
+    public class FeatureInVoting : IDomainBaseEntity<Guid>
     {
         public Guid Id { get; set; }
 
