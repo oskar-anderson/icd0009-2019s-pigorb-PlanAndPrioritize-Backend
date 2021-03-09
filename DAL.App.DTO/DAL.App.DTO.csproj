@@ -6,10 +6,11 @@
 
     <ItemGroup>
       <PackageReference Include="ee.itcollege.pigorb.bookswap.Contracts.DAL.Base" Version="1.0.0" />
+      <PackageReference Include="ee.itcollege.pigorb.bookswap.DAL.Base.EF" Version="1.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Mappers" />
+      <ProjectReference Include="..\Domain\Domain.csproj" />
     </ItemGroup>
 
 </Project>

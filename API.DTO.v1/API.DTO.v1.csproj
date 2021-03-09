@@ -5,7 +5,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Mappers" />
+      <PackageReference Include="ee.itcollege.pigorb.bookswap.BLL.Base" Version="1.0.0" />
+      <PackageReference Include="ee.itcollege.pigorb.bookswap.Contracts.DAL.Base" Version="1.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BLL.App.DTO\BLL.App.DTO.csproj" />
     </ItemGroup>
 
 </Project>

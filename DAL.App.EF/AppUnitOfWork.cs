@@ -1,5 +1,7 @@
 ﻿using System;
 using Contracts.DAL.App;
+using Contracts.DAL.App.Repositories;
+using DAL.App.EF.Repositories;
 using ee.itcollege.pigorb.bookswap.DAL.Base.EF;
 
 namespace DAL.App.EF
@@ -10,11 +12,27 @@ namespace DAL.App.EF
         {
         }
 
-        //public IAppUserRepository AppUsers => GetRepository<IAppUserRepository>(
-        //    () => new AppUserRepository(UowDbContext));
-        
-        // public IAuthorRepository Authors => GetRepository<IAuthorRepository>(
-        //    () => new AuthorRepository(UowDbContext));
-
+        public IAppUserRepository AppUsers => GetRepository<IAppUserRepository>(
+            () => new AppUserRepository(UowDbContext));
+        public ICategoryRepository Categories => GetRepository<ICategoryRepository>(
+            () => new CategoryRepository(UowDbContext));
+        public ICommentRepository Comments => GetRepository<ICommentRepository>(
+            () => new CommentRepository(UowDbContext));
+        public IFeatureInVotingRepository FeatureInVotings => GetRepository<IFeatureInVotingRepository>(
+            () => new FeatureInVotingRepository(UowDbContext));
+        public IFeatureRepository Features => GetRepository<IFeatureRepository>(
+            () => new FeatureRepository(UowDbContext));
+        public IFeatureStatusRepository FeatureStatuses => GetRepository<IFeatureStatusRepository>(
+            () => new FeatureStatusRepository(UowDbContext));
+        public IPriorityStatusRepository PriorityStatuses => GetRepository<IPriorityStatusRepository>(
+            () => new PriorityStatusRepository(UowDbContext));
+        public IUserInVotingRepository UserInVotings => GetRepository<IUserInVotingRepository>(
+            () => new UserInVotingRepository(UowDbContext));
+        public IUsersFeaturePriorityRepository UsersFeaturePriorities => GetRepository<IUsersFeaturePriorityRepository>(
+            () => new UsersFeaturePriorityRepository(UowDbContext));
+        public IVotingRepository Votings => GetRepository<IVotingRepository>(
+            () => new VotingRepository(UowDbContext));
+        public IVotingStatusRepository VotingStatuses => GetRepository<IVotingStatusRepository>(
+            () => new VotingStatusRepository(UowDbContext));
     }
 }

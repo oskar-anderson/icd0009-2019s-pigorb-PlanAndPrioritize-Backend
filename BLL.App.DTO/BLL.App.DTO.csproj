@@ -4,4 +4,13 @@
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="ee.itcollege.pigorb.bookswap.BLL.Base" Version="1.0.0" />
+      <PackageReference Include="ee.itcollege.pigorb.bookswap.Contracts.DAL.Base" Version="1.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DAL.App.DTO\DAL.App.DTO.csproj" />
+    </ItemGroup>
+
 </Project>

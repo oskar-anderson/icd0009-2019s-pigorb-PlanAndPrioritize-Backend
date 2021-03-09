@@ -5,11 +5,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Mappers" />
-      <Folder Include="Services" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="ee.itcollege.pigorb.bookswap.BLL.Base" Version="1.0.0" />
     </ItemGroup>
 
