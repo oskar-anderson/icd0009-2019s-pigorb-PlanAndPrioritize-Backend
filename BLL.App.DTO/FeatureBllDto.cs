@@ -23,13 +23,13 @@ namespace BLL.App.DTO
         public int Duration { get; set; }
 
         public Guid? CategoryId { get; set; }
-        // public CategoryBllDto? Category { get; set; }
+        public CategoryBllDto? Category { get; set; }
         
         public Guid FeatureStatusId { get; set; }
-        // public FeatureStatusBllDto? FeatureStatus { get; set; }
+        public FeatureStatusBllDto? FeatureStatus { get; set; }
         
         public Guid? AppUserId { get; set; }
-        //public AppUserBllDto? AppUser { get; set; }
+        public AppUserBllDto? AppUser { get; set; }
 
         public DateTime TimeCreated { get; set; }
         
@@ -37,8 +37,8 @@ namespace BLL.App.DTO
 
         public string? ChangeLog { get; set; }
 
-        // public ICollection<CommentBllDto>? Comments { get; set; }
-        //
-        // public ICollection<FeatureInVotingBllDto>? FeatureInVotings { get; set; }
+        public ICollection<CommentBllDto>? Comments { get; set; }
+        
+        public ICollection<FeatureInVotingBllDto>? FeatureInVotings { get; set; }
     }
 }

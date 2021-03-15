@@ -16,8 +16,8 @@ namespace DAL.App.DTO
         public DateTime EndTime { get; set; }
 
         public Guid VotingStatusId { get; set; }
-        // public VotingStatusDalDto? VotingStatus { get; set; }
-        //
+        public VotingStatusDalDto? VotingStatus { get; set; }
+
         // public ICollection<UserInVotingDalDto>? UserInVotings { get; set; }
         //
         // public ICollection<FeatureInVotingDalDto>? FeatureInVotings { get; set; }

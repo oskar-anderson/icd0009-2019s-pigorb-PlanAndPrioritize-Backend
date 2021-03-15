@@ -18,12 +18,12 @@ namespace BLL.App.DTO
         
         public decimal AveragePriorityValue { get; set; }
 
-        public Guid VotingId { get; set; }
-        // public VotingBllDto? Voting { get; set; }
+        public Guid VotingId { get; set; } 
+        public VotingBllDto? Voting { get; set; }
 
         public Guid FeatureId { get; set; }
-        // public FeatureBllDto? Feature { get; set; }
+        public FeatureBllDto? Feature { get; set; }
 
-        // public ICollection<UsersFeaturePriorityBllDto>? UsersFeaturePriorities { get; set; }
+        public ICollection<UsersFeaturePriorityBllDto>? UsersFeaturePriorities { get; set; }
     }
 }

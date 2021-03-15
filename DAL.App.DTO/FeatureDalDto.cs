@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
 
 namespace DAL.App.DTO
@@ -22,13 +23,13 @@ namespace DAL.App.DTO
         public int Duration { get; set; }
 
         public Guid? CategoryId { get; set; }
-        // public CategoryDalDto? Category { get; set; }
+        public CategoryDalDto? Category { get; set; }
         
         public Guid FeatureStatusId { get; set; }
-        // public FeatureStatusDalDto? FeatureStatus { get; set; }
+        public FeatureStatusDalDto? FeatureStatus { get; set; }
         
         public Guid? AppUserId { get; set; }
-        //public AppUserDalDto? AppUser { get; set; }
+        public AppUserDalDto? AppUser { get; set; }
 
         public DateTime TimeCreated { get; set; }
         
@@ -36,8 +37,8 @@ namespace DAL.App.DTO
 
         public string? ChangeLog { get; set; }
 
-        // public ICollection<CommentDalDto>? Comments { get; set; }
-        //
-        // public ICollection<FeatureInVotingDalDto>? FeatureInVotings { get; set; }
+        public ICollection<CommentDalDto>? Comments { get; set; }
+        
+        public ICollection<FeatureInVotingDalDto>? FeatureInVotings { get; set; }
     }
 }

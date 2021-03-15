@@ -1,17 +1,13 @@
 using System;
+using System.Collections.Generic;
 using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
+using Microsoft.VisualBasic;
 
 namespace API.DTO.v1
 {
-    public class FeatureApiDto : IDomainBaseEntity<Guid>
+    public class FeatureCreateApiDto
     {
-        public Guid Id { get; set; }
-        
         public string Title { get; set; } = default!;
-        
-        public int Size { get; set; }
-
-        public decimal PriorityValue { get; set; }
 
         public string? Description { get; set; }
         
@@ -22,22 +18,33 @@ namespace API.DTO.v1
         public int Duration { get; set; }
 
         public Guid? CategoryId { get; set; }
-        // public CategoryApiDto? Category { get; set; }
-        
+
         public Guid FeatureStatusId { get; set; }
-        // public FeatureStatusApiDto? FeatureStatus { get; set; }
         
         public Guid? AppUserId { get; set; }
-        //public AppUserApiDto? AppUser { get; set; }
+    }
+    
+    public class FeatureEditApiDto : FeatureCreateApiDto
+    {
+        public Guid Id { get; set; }
+        
+        public int Size { get; set; }
 
+        public decimal PriorityValue { get; set; }
+        
         public DateTime TimeCreated { get; set; }
         
-        public DateTime LastEdited { get; set; }
-
         public string? ChangeLog { get; set; }
-
-        // public ICollection<CommentApiDto>? Comments { get; set; }
-        //
-        // public ICollection<FeatureInVotingApiDto>? FeatureInVotings { get; set; }
+    }
+    
+    public class FeatureApiDto : FeatureEditApiDto
+    {
+        public DateTime LastEdited { get; set; }
+        public string CategoryName { get; set; } = default!;
+        public string FeatureStatusName { get; set; } = default!;
+        public string? Assignee { get; set; }
+        
+        public ICollection<Guid>? CommentIds { get; set; }
+        public ICollection<Guid>? VotingIds { get; set; }
     }
 }

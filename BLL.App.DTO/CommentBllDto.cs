@@ -10,10 +10,10 @@ namespace BLL.App.DTO
         public string Content { get; set; } = default!;
 
         public Guid FeatureId { get; set; } = default!;
-        // public FeatureBllDto? Feature { get; set; }
+        public FeatureBllDto? Feature { get; set; }
 
         public Guid AppUserId { get; set; } = default!;
-        // public AppUserBllDto? AppUser { get; set; }
+        public AppUserBllDto? AppUser { get; set; }
         
         public DateTime TimeCreated { get; set; }
     }

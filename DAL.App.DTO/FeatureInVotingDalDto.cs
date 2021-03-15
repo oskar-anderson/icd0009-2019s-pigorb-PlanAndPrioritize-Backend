@@ -18,7 +18,7 @@ namespace DAL.App.DTO
         public decimal AveragePriorityValue { get; set; }
 
         public Guid VotingId { get; set; }
-        // public VotingDalDto? Voting { get; set; }
+        public VotingDalDto? Voting { get; set; }
 
         public Guid FeatureId { get; set; }
         // public FeatureDalDto? Feature { get; set; }

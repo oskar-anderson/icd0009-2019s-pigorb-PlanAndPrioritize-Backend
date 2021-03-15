@@ -3,7 +3,7 @@ using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
 
 namespace API.DTO.v1
 {
-    public class AppUserApiDto : IDomainBaseEntity<Guid>
+    public class AppUserApiDto : IDomainBaseEntity<Guid> // Duplicate
     {
         public Guid Id { get; set; }
         

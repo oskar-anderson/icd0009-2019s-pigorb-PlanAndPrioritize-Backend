@@ -13,7 +13,7 @@ namespace DAL.App.DTO
         // public FeatureDalDto? Feature { get; set; }
 
         public Guid AppUserId { get; set; } = default!;
-        // public AppUserDalDto? AppUser { get; set; }
+        public AppUserDalDto? AppUser { get; set; }
         
         public DateTime TimeCreated { get; set; }
     }
