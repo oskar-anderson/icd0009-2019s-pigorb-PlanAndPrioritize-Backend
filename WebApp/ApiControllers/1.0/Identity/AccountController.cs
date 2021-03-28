@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using API.DTO.v1.Identity;
+using Contracts.BLL.App;
 using Domain;
 using Extensions;
 using Microsoft.AspNetCore.Http;
@@ -20,6 +22,7 @@ namespace WebApp.ApiControllers._1._0.Identity
         private readonly RoleManager<AppRole> _roleManager;
         private readonly ILogger<AccountController> _logger;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IAppBLL _bll;
 
         /// <summary>
         /// Constructor
@@ -30,13 +33,14 @@ namespace WebApp.ApiControllers._1._0.Identity
         /// <param name="logger">Logger</param>
         /// <param name="roleManager">Role Manager</param>
         public AccountController(IConfiguration configuration, UserManager<AppUser> userManager,
-            ILogger<AccountController> logger, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager)
+            ILogger<AccountController> logger, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager, IAppBLL bll)
         {
             _configuration = configuration;
             _userManager = userManager;
             _logger = logger;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _bll = bll;
         }
         
         /// <summary>
@@ -51,24 +55,37 @@ namespace WebApp.ApiControllers._1._0.Identity
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(MessageDto))]
         public async Task<ActionResult<string>> Login([FromBody] LoginDto model)
         {
-            var appUser = await _userManager.FindByEmailAsync(model.Email);
-            if (appUser == null)
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
             {
                 _logger.LogInformation($"Web-Api login. User {model.Email} not found!");
                 return NotFound(new MessageDto("User not found!"));
             }
 
-            var result = await _signInManager.CheckPasswordSignInAsync(appUser, model.Password, false);
+            var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
             if (result.Succeeded)
             {
-                var claimsPrincipal = await _signInManager.CreateUserPrincipalAsync(appUser);
+                var claimsPrincipal = await _signInManager.CreateUserPrincipalAsync(user);
                 var jwt = IdentityExtensions.GenerateJWT(claimsPrincipal.Claims,
                     _configuration["JWT:SigningKey"],
                     _configuration["JWT:Issuer"],
                     _configuration.GetValue<int>("JWT:ExpirationInDays")
                 );
-                _logger.LogInformation($"WebApi login. User {appUser.Email} logged in.");
-                return Ok(new JwtResponseDto() {Token = jwt, Status = $"User {appUser.Email} logged in."});
+
+                var jwtResponse = new JwtResponseDto()
+                    {Token = jwt, Status = $"User {user.Email} logged in.", RequirePasswordChange = false};
+                
+                var isFirstLogin = false;
+                if (_userManager.GetLoginsAsync(user).Result.Count == 0)
+                {
+                    _logger.LogInformation($"Users first login.");
+                    await _userManager.AddLoginAsync(user, new UserLoginInfo("First login", "Key", "Name"));
+                    isFirstLogin = true;
+                }
+                jwtResponse.RequirePasswordChange = isFirstLogin;
+
+                _logger.LogInformation($"WebApi login. User {user.Email} logged in.");
+                return Ok(jwtResponse);
             }
 
             _logger.LogInformation($"Web-Api login. User {model.Email} attempted to log-in with bad password!");
@@ -153,6 +170,26 @@ namespace WebApp.ApiControllers._1._0.Identity
             _logger.LogInformation($"User {user.Email} not found after creation!");
             return BadRequest(new MessageDto("User not found after creation!"));
         }
-        
+
+        public async Task<ActionResult<string>> ChangePassword([FromBody] PasswordDto model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                _logger.LogInformation($"Web-Api password change attempt. User {model.Email} not found!");
+                return NotFound(new MessageDto("User not found!"));
+            }
+
+            var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+            if (result.Succeeded)
+            {
+                _logger.LogInformation($"Password change for user {model.Email}.");
+                return Ok();
+            }
+
+            _logger.LogInformation($"Password change for user {user.Email} failed!");
+            return BadRequest(new MessageDto("Password change failed!"));
+        }
+
     }
 }

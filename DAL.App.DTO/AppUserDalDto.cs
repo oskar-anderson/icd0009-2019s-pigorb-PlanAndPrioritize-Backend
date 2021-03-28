@@ -11,6 +11,8 @@ namespace DAL.App.DTO
         
         public string LastName { get; set; } = default!;
         
+        public DateTime LastLogin { get; set; }
+
         // public ICollection<CommentDalDto>? Comments { get; set; }
         //
         // public ICollection<FeatureDalDto>? Features { get; set; }

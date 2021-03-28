@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using BLL.App.DTO;
 using BLL.App.DTO.Mappers;
 using Contracts.BLL.App.Services;
@@ -16,6 +18,5 @@ namespace BLL.App.Services
             : base(unitOfWork, new BLLAppUserMapper(), unitOfWork.AppUsers)
         {
         }
-        
     }
 }

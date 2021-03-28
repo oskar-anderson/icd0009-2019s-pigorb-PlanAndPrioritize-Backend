@@ -13,5 +13,7 @@ namespace API.DTO.v1.Identity
         [Required]
         public string Status { get; set; } = default!;
 
+        [Required]
+        public bool RequirePasswordChange { get; set; }
     }
 }

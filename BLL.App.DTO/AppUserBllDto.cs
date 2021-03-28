@@ -12,6 +12,8 @@ namespace BLL.App.DTO
         
         public string LastName { get; set; } = default!;
         
+        public DateTime LastLogin { get; set; }
+
         // public ICollection<CommentBllDto>? Comments { get; set; }
         //
         // public ICollection<FeatureBllDto>? Features { get; set; }
