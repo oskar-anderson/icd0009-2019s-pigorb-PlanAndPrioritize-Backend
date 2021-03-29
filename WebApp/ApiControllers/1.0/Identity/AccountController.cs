@@ -79,7 +79,7 @@ namespace WebApp.ApiControllers._1._0.Identity
                 if (_userManager.GetLoginsAsync(user).Result.Count == 0)
                 {
                     _logger.LogInformation($"Users first login.");
-                    await _userManager.AddLoginAsync(user, new UserLoginInfo("First login", "Key", "Name"));
+                    await _userManager.AddLoginAsync(user, new UserLoginInfo("PlanAndPrioritize", user.Email, user.Email));
                     isFirstLogin = true;
                 }
                 jwtResponse.RequirePasswordChange = isFirstLogin;

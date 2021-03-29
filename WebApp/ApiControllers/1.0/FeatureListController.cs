@@ -56,23 +56,16 @@ namespace WebApp.ApiControllers._1._0
             return Ok(featureDto);
         }
         
-        [HttpPut("{id}")]
-        public async Task<IActionResult> EditFeature(Guid id, FeatureEditApiDto featureDto)
+        [HttpPut]
+        public async Task<IActionResult> EditFeature(FeatureEditApiDto featureDto)
         {
-            if (id != featureDto.Id)
-            {
-                return BadRequest();
-            }
-
-            var feature = await _bll.Features.FirstOrDefault(id);
-            
+            var feature = await _bll.Features.FirstOrDefault(featureDto.Id);
             if (feature == null)
             {
                 return BadRequest();
             }
 
             feature = _mapper.MapFeatureEdit(featureDto);
-            
             _bll.Features.Edit(feature);
             
             try
@@ -81,16 +74,13 @@ namespace WebApp.ApiControllers._1._0
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await _bll.Features.Exists(id))
+                if (!await _bll.Features.Exists(featureDto.Id))
                 {
                     return NotFound();
                 }
-
                 throw;
             }
-
             return NoContent();
-
         }
         
         [HttpPost]

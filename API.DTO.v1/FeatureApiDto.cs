@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
-using Microsoft.VisualBasic;
 
 namespace API.DTO.v1
 {
@@ -18,7 +16,7 @@ namespace API.DTO.v1
         public int Duration { get; set; }
 
         public Guid? CategoryId { get; set; }
-
+        
         public Guid FeatureStatusId { get; set; }
         
         public Guid? AppUserId { get; set; }
