@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Classifiers;
 using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
 
 namespace Domain
@@ -29,10 +30,9 @@ namespace Domain
 
         public Guid? CategoryId { get; set; }
         public Category? Category { get; set; }
-        
-        public Guid FeatureStatusId { get; set; }
-        public FeatureStatus? FeatureStatus { get; set; }
-        
+
+        public FeatureStatus FeatureStatus { get; set; }
+
         public Guid? AppUserId { get; set; }
         public AppUser? AppUser { get; set; }
 

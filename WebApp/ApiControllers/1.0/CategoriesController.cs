@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using API.DTO.v1;
 using API.DTO.v1.Mappers;
 using Contracts.BLL.App;
-using Domain;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +14,7 @@ namespace WebApp.ApiControllers._1._0
 {
     [ApiController]
     [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]/[action]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CategoriesController : ControllerBase
     {
@@ -28,16 +27,16 @@ namespace WebApp.ApiControllers._1._0
             _mapper = new DTOCategoryMapper();        }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
+        public async Task<ActionResult<IEnumerable<CategoryApiDto>>> GetCategories()
         {
-            var categories = (await _bll.Categories.GetAll())
+            var categories = (await _bll.Categories.GetCategoriesWithTaskCounts())
                 .Select(bllEntity => _mapper.Map(bllEntity));
             
             return Ok(categories);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> GetCategory(Guid id)
+        public async Task<ActionResult<CategoryEditApiDto>> GetCategory(Guid id)
         {
             var categoryDto = _mapper.Map(await _bll.Categories.FirstOrDefault(id));
 
@@ -50,9 +49,14 @@ namespace WebApp.ApiControllers._1._0
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditCategory(CategoryEditApiDto categoryDto)
+        public async Task<IActionResult> EditCategory(Guid id, CategoryEditApiDto categoryDto)
         {
-            var category = await _bll.Categories.FirstOrDefault(categoryDto.Id);
+            if (id != categoryDto.Id)
+            {
+                return BadRequest();
+            }
+            
+            var category = await _bll.Categories.FirstOrDefault(id);
             if (category == null)
             {
                 return BadRequest();
@@ -67,7 +71,7 @@ namespace WebApp.ApiControllers._1._0
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await _bll.Features.Exists(categoryDto.Id))
+                if (!await _bll.Categories.Exists(categoryDto.Id))
                 {
                     return NotFound();
                 }
@@ -77,7 +81,7 @@ namespace WebApp.ApiControllers._1._0
         }
 
         [HttpPost]
-        public async Task<ActionResult<Category>> CreateCategory(CategoryCreateApiDto categoryDto)
+        public async Task<ActionResult<CategoryApiDto>> CreateCategory(CategoryCreateApiDto categoryDto)
         {
             var category = _mapper.MapCategoryCreate(categoryDto);
             _bll.Categories.Add(category);

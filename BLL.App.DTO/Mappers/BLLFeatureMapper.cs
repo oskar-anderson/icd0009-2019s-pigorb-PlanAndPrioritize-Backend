@@ -24,13 +24,7 @@ namespace BLL.App.DTO.Mappers
                     Title = feature.Category.Title,
                     Description = feature.Category.Description
                 },
-                FeatureStatusId = feature.FeatureStatusId,
-                FeatureStatus = new FeatureStatusBllDto
-                {
-                    Id = feature.FeatureStatus!.Id,
-                    Name = feature.FeatureStatus.Name,
-                    Description = feature.FeatureStatus.Description
-                },
+                FeatureStatus = feature.FeatureStatus,
                 AppUserId = feature.AppUserId,
                 AppUser = CreateAppUserBllDto(feature.AppUser),
                 TimeCreated = feature.TimeCreated,
@@ -65,7 +59,7 @@ namespace BLL.App.DTO.Mappers
                      Description = f.Voting.Description,
                      StartTime = f.Voting.StartTime,
                      EndTime = f.Voting.EndTime,
-                     VotingStatusId = f.Voting.VotingStatusId,
+                     VotingStatus = f.Voting.VotingStatus,
                     },
                     FeatureId = f.FeatureId
                 }).ToList()

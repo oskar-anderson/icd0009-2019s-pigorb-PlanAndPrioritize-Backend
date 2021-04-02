@@ -22,7 +22,7 @@ namespace WebApp.Controllers
         // GET: Votings
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Votings.Include(v => v.VotingStatus);
+            var appDbContext = _context.Votings;
             return View(await appDbContext.ToListAsync());
         }
 
@@ -35,7 +35,6 @@ namespace WebApp.Controllers
             }
 
             var voting = await _context.Votings
-                .Include(v => v.VotingStatus)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (voting == null)
             {
@@ -48,7 +47,6 @@ namespace WebApp.Controllers
         // GET: Votings/Create
         public IActionResult Create()
         {
-            ViewData["VotingStatusId"] = new SelectList(_context.VotingStatuses, "Id", "Name");
             return View();
         }
 
@@ -66,7 +64,6 @@ namespace WebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["VotingStatusId"] = new SelectList(_context.VotingStatuses, "Id", "Name", voting.VotingStatusId);
             return View(voting);
         }
 
@@ -83,7 +80,6 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["VotingStatusId"] = new SelectList(_context.VotingStatuses, "Id", "Name", voting.VotingStatusId);
             return View(voting);
         }
 
@@ -119,7 +115,6 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["VotingStatusId"] = new SelectList(_context.VotingStatuses, "Id", "Name", voting.VotingStatusId);
             return View(voting);
         }
 
@@ -132,7 +127,6 @@ namespace WebApp.Controllers
             }
 
             var voting = await _context.Votings
-                .Include(v => v.VotingStatus)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (voting == null)
             {

@@ -14,10 +14,10 @@ namespace API.DTO.v1
         public DateTime EndTime { get; set; }
 
         public int Duration { get; set; }
+        
+        public string FeatureStatus { get; set; } = default!;
 
         public Guid? CategoryId { get; set; }
-        
-        public Guid FeatureStatusId { get; set; }
         
         public Guid? AppUserId { get; set; }
     }
@@ -39,9 +39,7 @@ namespace API.DTO.v1
     {
         public DateTime LastEdited { get; set; }
         public string CategoryName { get; set; } = default!;
-        public string FeatureStatusName { get; set; } = default!;
         public string? Assignee { get; set; }
-        
         public ICollection<Guid>? CommentIds { get; set; }
         public ICollection<Guid>? VotingIds { get; set; }
     }

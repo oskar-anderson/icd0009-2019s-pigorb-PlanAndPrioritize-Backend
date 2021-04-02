@@ -22,7 +22,7 @@ namespace WebApp.Controllers
         // GET: UsersFeaturePriorities
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.UsersFeaturePriorities.Include(u => u.AppUser).Include(u => u.FeatureInVoting).Include(u => u.PriorityStatus);
+            var appDbContext = _context.UsersFeaturePriorities.Include(u => u.AppUser).Include(u => u.FeatureInVoting);
             return View(await appDbContext.ToListAsync());
         }
 
@@ -37,7 +37,6 @@ namespace WebApp.Controllers
             var usersFeaturePriority = await _context.UsersFeaturePriorities
                 .Include(u => u.AppUser)
                 .Include(u => u.FeatureInVoting)
-                .Include(u => u.PriorityStatus)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (usersFeaturePriority == null)
             {
@@ -52,7 +51,6 @@ namespace WebApp.Controllers
         {
             ViewData["AppUserId"] = new SelectList(_context.AppUsers, "Id", "FirstName");
             ViewData["FeatureInVotingId"] = new SelectList(_context.FeatureInVotings, "Id", "Id");
-            ViewData["PriorityStatusId"] = new SelectList(_context.PriorityStatuses, "Id", "Name");
             return View();
         }
 
@@ -72,7 +70,6 @@ namespace WebApp.Controllers
             }
             ViewData["AppUserId"] = new SelectList(_context.AppUsers, "Id", "FirstName", usersFeaturePriority.AppUserId);
             ViewData["FeatureInVotingId"] = new SelectList(_context.FeatureInVotings, "Id", "Id", usersFeaturePriority.FeatureInVotingId);
-            ViewData["PriorityStatusId"] = new SelectList(_context.PriorityStatuses, "Id", "Name", usersFeaturePriority.PriorityStatusId);
             return View(usersFeaturePriority);
         }
 
@@ -91,7 +88,6 @@ namespace WebApp.Controllers
             }
             ViewData["AppUserId"] = new SelectList(_context.AppUsers, "Id", "FirstName", usersFeaturePriority.AppUserId);
             ViewData["FeatureInVotingId"] = new SelectList(_context.FeatureInVotings, "Id", "Id", usersFeaturePriority.FeatureInVotingId);
-            ViewData["PriorityStatusId"] = new SelectList(_context.PriorityStatuses, "Id", "Name", usersFeaturePriority.PriorityStatusId);
             return View(usersFeaturePriority);
         }
 
@@ -129,7 +125,6 @@ namespace WebApp.Controllers
             }
             ViewData["AppUserId"] = new SelectList(_context.AppUsers, "Id", "FirstName", usersFeaturePriority.AppUserId);
             ViewData["FeatureInVotingId"] = new SelectList(_context.FeatureInVotings, "Id", "Id", usersFeaturePriority.FeatureInVotingId);
-            ViewData["PriorityStatusId"] = new SelectList(_context.PriorityStatuses, "Id", "Name", usersFeaturePriority.PriorityStatusId);
             return View(usersFeaturePriority);
         }
 
@@ -144,7 +139,6 @@ namespace WebApp.Controllers
             var usersFeaturePriority = await _context.UsersFeaturePriorities
                 .Include(u => u.AppUser)
                 .Include(u => u.FeatureInVoting)
-                .Include(u => u.PriorityStatus)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (usersFeaturePriority == null)
             {

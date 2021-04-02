@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Classifiers;
 using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
 
 namespace Domain
@@ -16,8 +17,7 @@ namespace Domain
         
         public DateTime EndTime { get; set; }
 
-        public Guid VotingStatusId { get; set; }
-        public VotingStatus? VotingStatus { get; set; }
+        public VotingStatus VotingStatus { get; set; }
 
         public ICollection<UserInVoting>? UserInVotings { get; set; }
         

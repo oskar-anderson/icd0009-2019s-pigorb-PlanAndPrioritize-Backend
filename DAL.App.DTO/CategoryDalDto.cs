@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
 
 namespace DAL.App.DTO
@@ -11,6 +12,6 @@ namespace DAL.App.DTO
         
         public string? Description { get; set; }
 
-        // public ICollection<FeatureDalDto>? Features { get; set; }
+        public ICollection<FeatureDalDto>? Features { get; set; }
     }
 }

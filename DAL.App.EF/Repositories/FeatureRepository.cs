@@ -24,12 +24,10 @@ namespace DAL.App.EF.Repositories
             var features = RepoDbContext.Features
                 .Include(f => f.Category)
                 .Include(f => f.AppUser)
-                .Include(f => f.FeatureStatus)
                 .Include(f => f.Comments)
                     .ThenInclude(c => c.AppUser)
                 .Include(f => f.FeatureInVotings)
                     .ThenInclude(fv => fv.Voting)
-                        //.ThenInclude(v => v!.VotingStatus)
                 .Select(dbEntity => _mapper.MapFeature(dbEntity))
                 .AsNoTracking();
             return await features.ToListAsync();
@@ -39,7 +37,6 @@ namespace DAL.App.EF.Repositories
         {
             var features = RepoDbContext.Features
                 .Include(f => f.Category)
-                .Include(f => f.FeatureStatus)
                 .Include(f => f.AppUser)
                 .Select(dbEntity => _mapper.MapFeature(dbEntity))
                 .AsNoTracking();

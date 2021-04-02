@@ -22,7 +22,7 @@ namespace WebApp.Controllers
         // GET: Features
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Features.Include(f => f.AppUser).Include(f => f.Category).Include(f => f.FeatureStatus);
+            var appDbContext = _context.Features.Include(f => f.AppUser).Include(f => f.Category);
             return View(await appDbContext.ToListAsync());
         }
 
@@ -37,7 +37,6 @@ namespace WebApp.Controllers
             var feature = await _context.Features
                 .Include(f => f.AppUser)
                 .Include(f => f.Category)
-                .Include(f => f.FeatureStatus)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (feature == null)
             {
@@ -52,7 +51,6 @@ namespace WebApp.Controllers
         {
             ViewData["AppUserId"] = new SelectList(_context.AppUsers, "Id", "FirstName");
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Title");
-            ViewData["FeatureStatusId"] = new SelectList(_context.FeatureStatuses, "Id", "Name");
             return View();
         }
 
@@ -72,7 +70,6 @@ namespace WebApp.Controllers
             }
             ViewData["AppUserId"] = new SelectList(_context.AppUsers, "Id", "FirstName", feature.AppUserId);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Title", feature.CategoryId);
-            ViewData["FeatureStatusId"] = new SelectList(_context.FeatureStatuses, "Id", "Name", feature.FeatureStatusId);
             return View(feature);
         }
 
@@ -91,7 +88,6 @@ namespace WebApp.Controllers
             }
             ViewData["AppUserId"] = new SelectList(_context.AppUsers, "Id", "FirstName", feature.AppUserId);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Title", feature.CategoryId);
-            ViewData["FeatureStatusId"] = new SelectList(_context.FeatureStatuses, "Id", "Name", feature.FeatureStatusId);
             return View(feature);
         }
 
@@ -129,7 +125,6 @@ namespace WebApp.Controllers
             }
             ViewData["AppUserId"] = new SelectList(_context.AppUsers, "Id", "FirstName", feature.AppUserId);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Title", feature.CategoryId);
-            ViewData["FeatureStatusId"] = new SelectList(_context.FeatureStatuses, "Id", "Name", feature.FeatureStatusId);
             return View(feature);
         }
 
@@ -144,7 +139,6 @@ namespace WebApp.Controllers
             var feature = await _context.Features
                 .Include(f => f.AppUser)
                 .Include(f => f.Category)
-                .Include(f => f.FeatureStatus)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (feature == null)
             {

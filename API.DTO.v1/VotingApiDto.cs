@@ -15,9 +15,8 @@ namespace API.DTO.v1
         
         public DateTime EndTime { get; set; }
 
-        public Guid VotingStatusId { get; set; }
-        // public VotingStatusApiDto? VotingStatus { get; set; }
-        //
+        public string VotingStatus { get; set; } = default!;
+        
         // public ICollection<UserInVotingApiDto>? UserInVotings { get; set; }
         //
         // public ICollection<FeatureInVotingApiDto>? FeatureInVotings { get; set; }

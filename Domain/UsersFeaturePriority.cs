@@ -1,4 +1,5 @@
 using System;
+using Classifiers;
 using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
 
 namespace Domain
@@ -23,7 +24,6 @@ namespace Domain
         public Guid FeatureInVotingId { get; set; }
         public FeatureInVoting? FeatureInVoting { get; set; }
 
-        public Guid PriorityStatusId { get; set; }
-        public PriorityStatus? PriorityStatus { get; set; }
+        public PriorityStatus PriorityStatus { get; set; }
     }
 }

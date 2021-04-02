@@ -22,17 +22,11 @@ namespace DAL.App.EF
             () => new FeatureInVotingRepository(UowDbContext));
         public IFeatureRepository Features => GetRepository<IFeatureRepository>(
             () => new FeatureRepository(UowDbContext));
-        public IFeatureStatusRepository FeatureStatuses => GetRepository<IFeatureStatusRepository>(
-            () => new FeatureStatusRepository(UowDbContext));
-        public IPriorityStatusRepository PriorityStatuses => GetRepository<IPriorityStatusRepository>(
-            () => new PriorityStatusRepository(UowDbContext));
         public IUserInVotingRepository UserInVotings => GetRepository<IUserInVotingRepository>(
             () => new UserInVotingRepository(UowDbContext));
         public IUsersFeaturePriorityRepository UsersFeaturePriorities => GetRepository<IUsersFeaturePriorityRepository>(
             () => new UsersFeaturePriorityRepository(UowDbContext));
         public IVotingRepository Votings => GetRepository<IVotingRepository>(
             () => new VotingRepository(UowDbContext));
-        public IVotingStatusRepository VotingStatuses => GetRepository<IVotingStatusRepository>(
-            () => new VotingStatusRepository(UowDbContext));
     }
 }

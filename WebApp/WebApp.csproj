@@ -41,6 +41,21 @@
       <_ContentIncludedByDefault Remove="Views\Features\Details.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Features\Edit.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Features\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\FeatureStatuses\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\FeatureStatuses\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\FeatureStatuses\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\FeatureStatuses\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\FeatureStatuses\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\PriorityStatuses\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\PriorityStatuses\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\PriorityStatuses\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\PriorityStatuses\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\PriorityStatuses\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\VotingStatuses\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\VotingStatuses\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\VotingStatuses\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\VotingStatuses\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\VotingStatuses\Index.cshtml" />
     </ItemGroup>
 
 </Project>

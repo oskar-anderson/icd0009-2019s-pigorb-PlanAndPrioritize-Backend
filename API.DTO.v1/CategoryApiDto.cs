@@ -1,5 +1,4 @@
 using System;
-using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
 
 namespace API.DTO.v1
 {
@@ -17,6 +16,10 @@ namespace API.DTO.v1
     
     public class CategoryApiDto : CategoryEditApiDto
     {
-        // public ICollection<FeatureApiDto>? Features { get; set; }
+        public int Count { get; set; }
+        
+        public int InProgress { get; set; }
+        
+        public int Finished { get; set; }
     }
 }

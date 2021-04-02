@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Classifiers;
 using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
 
 namespace BLL.App.DTO
@@ -25,9 +26,8 @@ namespace BLL.App.DTO
         public Guid? CategoryId { get; set; }
         public CategoryBllDto? Category { get; set; }
         
-        public Guid FeatureStatusId { get; set; }
-        public FeatureStatusBllDto? FeatureStatus { get; set; }
-        
+        public FeatureStatus FeatureStatus { get; set; }
+
         public Guid? AppUserId { get; set; }
         public AppUserBllDto? AppUser { get; set; }
 

@@ -10,11 +10,8 @@ namespace Contracts.DAL.App
         ICommentRepository Comments { get; }
         IFeatureInVotingRepository FeatureInVotings { get; }
         IFeatureRepository Features { get; }
-        IFeatureStatusRepository FeatureStatuses { get; }
-        IPriorityStatusRepository PriorityStatuses { get; }
         IUserInVotingRepository UserInVotings { get; }
         IUsersFeaturePriorityRepository UsersFeaturePriorities { get; }
         IVotingRepository Votings { get; }
-        IVotingStatusRepository VotingStatuses { get; }
     }
 }

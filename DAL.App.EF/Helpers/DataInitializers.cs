@@ -69,42 +69,6 @@ namespace DAL.App.EF.Helpers
                 }
             };
 
-            var featureStatuses = new FeatureStatus[]
-            {
-                new FeatureStatus
-                {
-                    Name = "To do", Description = "Tasks created get this status initially"
-                },
-                new FeatureStatus
-                {
-                    Name = "In progress"
-                },
-                new FeatureStatus
-                {
-                    Name = "In review"
-                },
-                new FeatureStatus
-                {
-                    Name = "Done"
-                }
-            };
-            
-            var votingStatuses = new VotingStatus[]
-            {
-                new VotingStatus
-                {
-                    Name = "Not open yet", Description = "Priority voting has been created but no dates assigned or open dates are in the future"
-                },
-                new VotingStatus
-                {
-                    Name = "Open", Description = "Priorities can be added"
-                },
-                new VotingStatus
-                {
-                    Name = "Closed", Description = "Priority voting dates are in the past"
-                }
-            };
-            
             /***
             var features = new Feature[]
             {
@@ -133,23 +97,7 @@ namespace DAL.App.EF.Helpers
                     context.Categories.Add(category);
                 }
             }
-            
-            foreach (var featureStatus in featureStatuses)
-            {
-                if (!context.FeatureStatuses.Any(g => g.Id == featureStatus.Id))
-                {
-                    context.FeatureStatuses.Add(featureStatus);
-                }
-            }
-            
-            foreach (var votingStatus in votingStatuses)
-            {
-                if (!context.VotingStatuses.Any(g => g.Id == votingStatus.Id))
-                {
-                    context.VotingStatuses.Add(votingStatus);
-                }
-            }
-            
+
             context.SaveChanges();
         }
         

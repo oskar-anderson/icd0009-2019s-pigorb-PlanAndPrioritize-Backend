@@ -31,7 +31,7 @@ namespace API.DTO.v1.Mappers
                 Duration = feature.Duration,
                 CategoryId = feature.CategoryId,
                 CategoryName = feature.Category!.Title,
-                FeatureStatusName = feature.FeatureStatus!.Name,
+                FeatureStatus = feature.FeatureStatus.ToString(),
                 AppUserId = feature.AppUserId,
                 Assignee = feature.AppUser == null ? "" : feature.AppUser.FirstName + " " + feature.AppUser.LastName,
                 TimeCreated = feature.TimeCreated,

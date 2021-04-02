@@ -31,6 +31,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contracts", "Contracts", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DTOs", "DTOs", "{2FD1CA9F-4118-4FC7-9CA8-53B6E1C9AC58}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Classifiers", "Classifiers\Classifiers.csproj", "{F43003DB-01C7-439E-A76D-335019E6B68F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,10 @@ Global
 		{E25650C2-82BA-4B7D-9638-C3EB9E236DAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E25650C2-82BA-4B7D-9638-C3EB9E236DAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E25650C2-82BA-4B7D-9638-C3EB9E236DAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F43003DB-01C7-439E-A76D-335019E6B68F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F43003DB-01C7-439E-A76D-335019E6B68F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F43003DB-01C7-439E-A76D-335019E6B68F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F43003DB-01C7-439E-A76D-335019E6B68F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E94386C0-7845-4327-8513-1921795727AD} = {99CBECB5-09CD-4BD5-B55F-A0C58A2230CC}

@@ -17,13 +17,13 @@ namespace API.DTO.v1
         
         public decimal PriorityValue { get; set; }
 
+        public string PriorityStatus { get; set; } = default!;
+
         public Guid AppUserId { get; set; }
         // public AppUserApiDto? AppUser { get; set; }
 
         public Guid FeatureInVotingId { get; set; }
         // public FeatureInVotingApiDto? FeatureInVoting { get; set; }
 
-        public Guid PriorityStatusId { get; set; }
-        // public PriorityStatusApiDto? PriorityStatus { get; set; }
     }
 }

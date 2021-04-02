@@ -1,4 +1,5 @@
 using System;
+using Classifiers;
 using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
 
 namespace BLL.App.DTO
@@ -16,14 +17,13 @@ namespace BLL.App.DTO
         public int Size { get; set; }
         
         public decimal PriorityValue { get; set; }
+        
+        public PriorityStatus PriorityStatus { get; set; }
 
         public Guid AppUserId { get; set; }
         // public AppUserBllDto? AppUser { get; set; }
 
         public Guid FeatureInVotingId { get; set; }
         // public FeatureInVotingBllDto? FeatureInVoting { get; set; }
-
-        public Guid PriorityStatusId { get; set; }
-        // public PriorityStatusBllDto? PriorityStatus { get; set; }
     }
 }

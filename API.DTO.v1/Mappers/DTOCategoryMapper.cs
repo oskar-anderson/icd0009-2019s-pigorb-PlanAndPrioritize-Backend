@@ -1,5 +1,4 @@
 using BLL.App.DTO;
-using DAL.App.DTO;
 
 namespace API.DTO.v1.Mappers
 {
@@ -12,7 +11,12 @@ namespace API.DTO.v1.Mappers
         
         public CategoryBllDto MapCategoryEdit(CategoryEditApiDto apiDTO)
         {
-            return Mapper.Map<CategoryEditApiDto, CategoryBllDto>(apiDTO);
+            return new CategoryBllDto
+            {
+                Id = apiDTO.Id,
+                Title = apiDTO.Title,
+                Description = apiDTO.Description
+            };
         }
     }
 }

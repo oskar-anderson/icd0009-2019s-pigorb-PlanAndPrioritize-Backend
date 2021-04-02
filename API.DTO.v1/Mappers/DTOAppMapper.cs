@@ -12,27 +12,24 @@ namespace API.DTO.v1.Mappers
         {
             MapperConfigurationExpression.CreateMap<AppUserBllDto, AppUserApiDto>();
             MapperConfigurationExpression.CreateMap<CategoryBllDto, CategoryApiDto>();
+            MapperConfigurationExpression.CreateMap<CategoryEditBllDto, CategoryEditApiDto>();
             MapperConfigurationExpression.CreateMap<CommentBllDto, CommentApiDto>();
             MapperConfigurationExpression.CreateMap<FeatureBllDto, FeatureApiDto>();
             MapperConfigurationExpression.CreateMap<FeatureInVotingBllDto, FeatureInVotingApiDto>();
-            MapperConfigurationExpression.CreateMap<FeatureStatusBllDto, FeatureStatusApiDto>();
-            MapperConfigurationExpression.CreateMap<PriorityStatusBllDto, PriorityStatusApiDto>();
             MapperConfigurationExpression.CreateMap<UserInVotingBllDto, UserInVotingApiDto>();
             MapperConfigurationExpression.CreateMap<UsersFeaturePriorityBllDto, UsersFeaturePriorityApiDto>();
             MapperConfigurationExpression.CreateMap<VotingBllDto, VotingApiDto>();
-            MapperConfigurationExpression.CreateMap<VotingStatusBllDto, VotingStatusApiDto>();
             
             MapperConfigurationExpression.CreateMap<AppUserApiDto, AppUserBllDto>();
             MapperConfigurationExpression.CreateMap<CategoryApiDto, CategoryBllDto>();
+            MapperConfigurationExpression.CreateMap<CategoryEditApiDto, CategoryEditBllDto>();
+            MapperConfigurationExpression.CreateMap<CategoryCreateApiDto, CategoryBllDto>();
             MapperConfigurationExpression.CreateMap<CommentApiDto, CommentBllDto>();
             MapperConfigurationExpression.CreateMap<FeatureApiDto, FeatureBllDto>();
             MapperConfigurationExpression.CreateMap<FeatureInVotingApiDto, FeatureInVotingBllDto>();
-            MapperConfigurationExpression.CreateMap<FeatureStatusApiDto, FeatureStatusBllDto>();
-            MapperConfigurationExpression.CreateMap<PriorityStatusApiDto, PriorityStatusBllDto>();
             MapperConfigurationExpression.CreateMap<UserInVotingApiDto, UserInVotingBllDto>();
             MapperConfigurationExpression.CreateMap<UsersFeaturePriorityApiDto, UsersFeaturePriorityBllDto>();
             MapperConfigurationExpression.CreateMap<VotingApiDto, VotingBllDto>();
-            MapperConfigurationExpression.CreateMap<VotingStatusApiDto, VotingStatusBllDto>();
             
             Mapper = new Mapper(new MapperConfiguration(MapperConfigurationExpression));
         }

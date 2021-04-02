@@ -19,12 +19,9 @@ namespace DAL.App.EF
         public DbSet<Comment> Comments { get; set; } = default!;
         public DbSet<Feature> Features { get; set; } = default!;
         public DbSet<FeatureInVoting> FeatureInVotings { get; set; } = default!;
-        public DbSet<FeatureStatus> FeatureStatuses { get; set; } = default!;
         public DbSet<Voting> Votings { get; set; } = default!;
-        public DbSet<VotingStatus> VotingStatuses { get; set; } = default!;
         public DbSet<UserInVoting> UserInVotings { get; set; } = default!;
         public DbSet<UsersFeaturePriority> UsersFeaturePriorities { get; set; } = default!;
-        public DbSet<PriorityStatus> PriorityStatuses { get; set; } = default!;
         
         private readonly Dictionary<IDomainBaseEntity<Guid>, IDomainBaseEntity<Guid>> _entityTracker
             = new Dictionary<IDomainBaseEntity<Guid>, IDomainBaseEntity<Guid>>();
