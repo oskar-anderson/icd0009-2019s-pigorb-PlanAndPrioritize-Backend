@@ -46,7 +46,7 @@ namespace WebApp.ApiControllers._1._0
         [HttpGet("{id}")]
         public async Task<ActionResult<FeatureApiDto>> GetFeature(Guid id)
         {
-            var featureDto = _mapper.Map(await _bll.Features.FirstOrDefault(id));
+            var featureDto = _mapper.MapFeature(await _bll.Features.FirstOrDefault(id));
 
             if (featureDto == null)
             {
@@ -56,10 +56,15 @@ namespace WebApp.ApiControllers._1._0
             return Ok(featureDto);
         }
         
-        [HttpPut]
-        public async Task<IActionResult> EditFeature(FeatureEditApiDto featureDto)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditFeature(Guid id, FeatureEditApiDto featureDto)
         {
-            var feature = await _bll.Features.FirstOrDefault(featureDto.Id);
+            if (id != featureDto.Id)
+            {
+                return BadRequest();
+            }
+            
+            var feature = await _bll.Features.FirstOrDefault(id);
             if (feature == null)
             {
                 return BadRequest();

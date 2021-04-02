@@ -50,9 +50,16 @@ namespace DAL.App.EF.Repositories
 
         public async Task<FeatureDalDto> FirstOrDefault(Guid id)
         {
-            var query = RepoDbSet.Where(a => a.Id == id).AsQueryable();
+            var query = RepoDbSet
+                .Include(f => f.Category)
+                .Include(f => f.AppUser)
+                .Include(f => f.Comments)
+                    .ThenInclude(c => c.AppUser)
+                .Include(f => f.FeatureInVotings)
+                    .ThenInclude(fv => fv.Voting)
+                .Where(a => a.Id == id).AsQueryable();
             
-            return Mapper.Map(await query.AsNoTracking().FirstOrDefaultAsync());
+            return _mapper.MapFeature(await query.AsNoTracking().FirstOrDefaultAsync());
         }
 
         public async Task Delete(Guid id)

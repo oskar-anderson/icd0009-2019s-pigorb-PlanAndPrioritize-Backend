@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using BLL.App.DTO;
 using BLL.App.DTO.Mappers;
 using Contracts.BLL.App.Services;
@@ -16,6 +20,10 @@ namespace BLL.App.Services
             : base(unitOfWork, new BLLCommentMapper(), unitOfWork.Comments)
         {
         }
-        
+
+        public async Task<IEnumerable<CommentBllDto>> GetCommentsForFeature(Guid featureId)
+        {
+            return (await ServiceRepository.GetCommentsForFeature(featureId)).Select(dalEntity => _mapper.Map(dalEntity));
+        }
     }
 }
