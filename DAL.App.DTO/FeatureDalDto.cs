@@ -17,13 +17,13 @@ namespace DAL.App.DTO
 
         public string? Description { get; set; }
         
-        public DateTime StartTime { get; set; }
+        public DateTime? StartTime { get; set; }
         
-        public DateTime EndTime { get; set; }
+        public DateTime? EndTime { get; set; }
 
         public int Duration { get; set; }
 
-        public Guid? CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
         public CategoryDalDto? Category { get; set; }
         
         public FeatureStatus FeatureStatus { get; set; }
@@ -33,6 +33,8 @@ namespace DAL.App.DTO
 
         public DateTime TimeCreated { get; set; }
         
+        public Guid CreatedById { get; set; }
+        public AppUserDalDto? CreatedBy { get; set; }
         public DateTime LastEdited { get; set; }
 
         public string? ChangeLog { get; set; }

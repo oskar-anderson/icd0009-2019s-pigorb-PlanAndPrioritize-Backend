@@ -1,10 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using API.DTO.v1;
 using API.DTO.v1.Mappers;
+using BLL.App.DTO;
+using Classifiers;
 using Contracts.BLL.App;
+using Domain;
+using Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,12 +21,12 @@ namespace WebApp.ApiControllers._1._0
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]/[action]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class FeatureListController : ControllerBase
+    public class FeaturesController : ControllerBase
     {
         private readonly IAppBLL _bll;
         private readonly DTOFeatureMapper _mapper;
 
-        public FeatureListController(IAppBLL bll)
+        public FeaturesController(IAppBLL bll)
         {
             _bll = bll;
             _mapper = new DTOFeatureMapper();
@@ -56,6 +61,19 @@ namespace WebApp.ApiControllers._1._0
             return Ok(featureDto);
         }
         
+        [HttpGet("{id}")]
+        public async Task<ActionResult<FeatureEditApiDto>> GetFeaturePlain(Guid id)
+        {
+            var featureDto = _mapper.MapFeatureEdit(await _bll.Features.GetFeaturePlain(id));
+
+            if (featureDto == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(featureDto);
+        }
+        
         [HttpPut("{id}")]
         public async Task<IActionResult> EditFeature(Guid id, FeatureEditApiDto featureDto)
         {
@@ -70,7 +88,16 @@ namespace WebApp.ApiControllers._1._0
                 return BadRequest();
             }
 
-            feature = _mapper.MapFeatureEdit(featureDto);
+            var user = await _bll.AppUsers.FindAsync(User.UserId());
+            var userName = user.FirstName + " " + user.LastName;
+            var category = await _bll.Categories.FirstOrDefault(featureDto.CategoryId);
+            AppUserBllDto? assignee = null;
+            if (featureDto.AppUserId != null)
+            {
+                assignee = await _bll.AppUsers.FindAsync(featureDto.AppUserId);
+            }
+            
+            feature = _bll.Features.ConstructEditedFeatureWithChangeLog(feature, featureDto, userName, category, assignee);
             _bll.Features.Edit(feature);
             
             try
@@ -92,11 +119,12 @@ namespace WebApp.ApiControllers._1._0
         public async Task<ActionResult<FeatureApiDto>> CreateFeature(FeatureCreateApiDto featureDto)
         {
             var feature = _mapper.MapFeatureCreate(featureDto);
-            _bll.Features.Add(feature);
+            _bll.Features.AddWithMetaData(feature, User.UserId());
             await _bll.SaveChangesAsync();
+            var createdFeature = await _bll.Features.GetLatestFeature();
 
-            return CreatedAtAction("GetFeature", new { id = feature.Id, 
-                version = HttpContext.GetRequestedApiVersion()?.ToString() ?? "0"}, feature);
+            return CreatedAtAction("GetFeature", new { id = createdFeature.Id, 
+                version = HttpContext.GetRequestedApiVersion()?.ToString() ?? "0"}, createdFeature);
         }
 
         [HttpDelete("{id}")]
@@ -114,6 +142,11 @@ namespace WebApp.ApiControllers._1._0
 
             return Ok(feature);
         }
-
+        
+        public ActionResult<IEnumerable<FeatureStatusApiDto>> GetFeatureStates()
+        {
+            ICollection<FeatureStatusApiDto> states = _bll.Features.GetFeatureStatuses();
+            return Ok(states);
+        }
     }
 }

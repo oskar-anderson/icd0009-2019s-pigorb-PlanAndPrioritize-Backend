@@ -18,6 +18,8 @@ namespace Contracts.DAL.App.Repositories
         Task<IEnumerable<TDALEntity>> GetAllWithoutCollections();
         Task<bool> Exists(Guid id);
         Task<TDALEntity> FirstOrDefault(Guid id);
+        Task<TDALEntity> GetFeaturePlain(Guid id);
+        Task<TDALEntity> GetLatestFeature();
         Task Delete(Guid id);
         TDALEntity Edit(TDALEntity entity);
     }

@@ -27,6 +27,11 @@ namespace BLL.App.Services
             return (await ServiceRepository.GetAll()).Select(dalEntity => _mapper.Map(dalEntity));
         }
 
+        public async Task<IEnumerable<CategoryBllDto>> GetAllPlain()
+        {
+            return (await ServiceRepository.GetAllPlain()).Select(dalEntity => _mapper.Map(dalEntity));
+        }
+
         public async Task<bool> Exists(Guid id)
         {
             return await ServiceRepository.Exists(id);

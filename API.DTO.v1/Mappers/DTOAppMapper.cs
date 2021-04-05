@@ -26,6 +26,7 @@ namespace API.DTO.v1.Mappers
             MapperConfigurationExpression.CreateMap<CategoryCreateApiDto, CategoryBllDto>();
             MapperConfigurationExpression.CreateMap<CommentApiDto, CommentBllDto>();
             MapperConfigurationExpression.CreateMap<FeatureApiDto, FeatureBllDto>();
+            MapperConfigurationExpression.CreateMap<FeatureCreateApiDto, FeatureBllDto>();
             MapperConfigurationExpression.CreateMap<FeatureInVotingApiDto, FeatureInVotingBllDto>();
             MapperConfigurationExpression.CreateMap<UserInVotingApiDto, UserInVotingBllDto>();
             MapperConfigurationExpression.CreateMap<UsersFeaturePriorityApiDto, UsersFeaturePriorityBllDto>();

@@ -1,11 +1,11 @@
 using System;
-using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
+using System.ComponentModel.DataAnnotations;
 
 namespace API.DTO.v1
 {
     public class CommentCreateApiDto
     {
-        public string Content { get; set; } = default!;
+        [MaxLength(2048)] [MinLength(1)] public string Content { get; set; } = default!;
         public Guid FeatureId { get; set; } = default!;
     }
     

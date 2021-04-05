@@ -28,6 +28,8 @@ namespace DAL.App.DTO.Mappers
                 AppUserId = feature.AppUserId,
                 AppUser = CreateAppUserDalDto(feature.AppUser),
                 TimeCreated = feature.TimeCreated,
+                CreatedById = feature.CreatedById,
+                CreatedBy = CreateAppUserDalDto(feature.CreatedBy),
                 LastEdited = feature.LastEdited,
                 ChangeLog = feature.ChangeLog,
                 Comments = feature.Comments?.Select(c => new CommentDalDto

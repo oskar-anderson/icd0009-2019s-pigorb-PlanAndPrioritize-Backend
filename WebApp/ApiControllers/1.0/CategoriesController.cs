@@ -34,6 +34,15 @@ namespace WebApp.ApiControllers._1._0
             
             return Ok(categories);
         }
+        
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<CategoryEditApiDto>>> GetCategoriesPlain()
+        {
+            var categories = (await _bll.Categories.GetAllPlain())
+                .Select(bllEntity => _mapper.Map(bllEntity));
+            
+            return Ok(categories);
+        }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<CategoryEditApiDto>> GetCategory(Guid id)

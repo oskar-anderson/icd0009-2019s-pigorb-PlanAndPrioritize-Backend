@@ -18,6 +18,21 @@ namespace API.DTO.v1.Mappers
             return Mapper.Map<FeatureEditApiDto, FeatureBllDto>(apiDTO);
         }
         
+        public FeatureEditApiDto MapFeatureEdit(FeatureBllDto bllDto)
+        {
+            return new FeatureEditApiDto
+            {
+                Id = bllDto.Id,
+                FeatureStatus = MapFeatureStatus(bllDto.FeatureStatus),
+                Title = bllDto.Title,
+                Description = bllDto.Description,
+                StartTime = bllDto.StartTime,
+                EndTime = bllDto.EndTime,
+                CategoryId = bllDto.CategoryId,
+                AppUserId = bllDto.AppUserId
+            };
+        }
+        
         public FeatureApiDto MapFeature(FeatureBllDto feature)
         {
             return new FeatureApiDto
@@ -36,8 +51,9 @@ namespace API.DTO.v1.Mappers
                 AppUserId = feature.AppUserId,
                 Assignee = feature.AppUser == null ? "" : feature.AppUser.FirstName + " " + feature.AppUser.LastName,
                 TimeCreated = feature.TimeCreated,
+                CreatedBy = feature.CreatedBy == null ? "" : feature.CreatedBy.FirstName + " " + feature.CreatedBy.LastName,
                 LastEdited = feature.LastEdited,
-                ChangeLog = feature.ChangeLog,
+                ChangeLog = feature.ChangeLog ?? "",
                 CommentIds = GetCommentIds(feature.Comments),
                 VotingIds = GetVotingIds(feature.FeatureInVotings)
             };
@@ -56,21 +72,15 @@ namespace API.DTO.v1.Mappers
 
         private string MapFeatureStatus(FeatureStatus status)
         {
-            switch (status)
+            return status switch
             {
-                case FeatureStatus.NotStarted:
-                    return "Not started";
-                case FeatureStatus.InProgress:
-                    return "In progress";
-                case FeatureStatus.InReview:
-                    return "In review";
-                case FeatureStatus.ToDeploy:
-                    return "To deploy";
-                case FeatureStatus.Closed:
-                    return "Closed";
-                default:
-                    return "Incorrect feature status value";
-            }
+                FeatureStatus.NotStarted => "Not started",
+                FeatureStatus.InProgress => "In progress",
+                FeatureStatus.InReview => "In review",
+                FeatureStatus.ToDeploy => "To deploy",
+                FeatureStatus.Closed => "Closed",
+                _ => "Incorrect feature status value"
+            };
         }
     }
 }

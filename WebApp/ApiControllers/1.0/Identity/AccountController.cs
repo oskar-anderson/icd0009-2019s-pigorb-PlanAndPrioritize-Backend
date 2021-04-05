@@ -32,6 +32,7 @@ namespace WebApp.ApiControllers._1._0.Identity
         /// <param name="signInManager">Sign In Manager</param>
         /// <param name="logger">Logger</param>
         /// <param name="roleManager">Role Manager</param>
+        /// <param name="bll">Services container</param>
         public AccountController(IConfiguration configuration, UserManager<AppUser> userManager,
             ILogger<AccountController> logger, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager, IAppBLL bll)
         {

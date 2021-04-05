@@ -1,12 +1,13 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace API.DTO.v1
 {
     public class CategoryCreateApiDto
     {
-        public string Title { get; set; } = default!;
+        [MaxLength(512)] [MinLength(1)] public string Title { get; set; } = default!;
         
-        public string? Description { get; set; }
+        [MaxLength(2048)] public string? Description { get; set; }
     }
     
     public class CategoryEditApiDto : CategoryCreateApiDto

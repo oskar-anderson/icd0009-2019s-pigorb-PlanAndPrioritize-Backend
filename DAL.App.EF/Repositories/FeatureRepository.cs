@@ -13,10 +13,12 @@ namespace DAL.App.EF.Repositories
 {
     public class FeatureRepository : EFBaseRepository<AppDbContext, Feature, FeatureDalDto>, IFeatureRepository
     {
+        private readonly AppDbContext _dbContext;
         private readonly DALFeatureMapper _mapper = new ();
         
         public FeatureRepository(AppDbContext dbContext) : base(dbContext, new DALFeatureMapper())
         {
+            _dbContext = dbContext;
         }
         
         public async Task<IEnumerable<FeatureDalDto>> GetAll()
@@ -24,6 +26,7 @@ namespace DAL.App.EF.Repositories
             var features = RepoDbContext.Features
                 .Include(f => f.Category)
                 .Include(f => f.AppUser)
+                .Include(f => f.CreatedBy)
                 .Include(f => f.Comments)
                     .ThenInclude(c => c.AppUser)
                 .Include(f => f.FeatureInVotings)
@@ -53,12 +56,34 @@ namespace DAL.App.EF.Repositories
             var query = RepoDbSet
                 .Include(f => f.Category)
                 .Include(f => f.AppUser)
+                .Include(f => f.CreatedBy)
                 .Include(f => f.Comments)
                     .ThenInclude(c => c.AppUser)
                 .Include(f => f.FeatureInVotings)
                     .ThenInclude(fv => fv.Voting)
                 .Where(a => a.Id == id).AsQueryable();
             
+            return _mapper.MapFeature(await query.AsNoTracking().FirstOrDefaultAsync());
+        }
+
+        public async Task<FeatureDalDto> GetFeaturePlain(Guid id)
+        {
+            var query = RepoDbSet.Where(a => a.Id == id).AsQueryable();
+            
+            return _mapper.Map(await query.AsNoTracking().FirstOrDefaultAsync());
+        }
+
+        public async Task<FeatureDalDto> GetLatestFeature()
+        {
+            var query = RepoDbSet
+                .Include(f => f.Category)
+                .Include(f => f.AppUser)
+                .Include(f => f.CreatedBy)
+                .Include(f => f.Comments)
+                .ThenInclude(c => c.AppUser)
+                .Include(f => f.FeatureInVotings)
+                .ThenInclude(fv => fv.Voting)
+                .OrderByDescending(f => f.TimeCreated);
             return _mapper.MapFeature(await query.AsNoTracking().FirstOrDefaultAsync());
         }
 
@@ -73,6 +98,8 @@ namespace DAL.App.EF.Repositories
         public FeatureDalDto Edit(FeatureDalDto dalEntity)
         {
             var entity = Mapper.Map(dalEntity);
+            // Added manually because on edit feature is not marked as modified and won't be updated. Why?
+            _dbContext.Entry(entity).Property(f => f.Title).IsModified = true;
             
             var trackedEntity = RepoDbSet.Update(entity).Entity;
             var result = Mapper.Map(trackedEntity);

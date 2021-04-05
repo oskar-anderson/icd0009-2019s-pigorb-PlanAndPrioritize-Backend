@@ -29,7 +29,15 @@ namespace DAL.App.EF.Repositories
                 .AsNoTracking();
             return await categories.ToListAsync();
         }
-        
+
+        public async Task<IEnumerable<CategoryDalDto>> GetAllPlain()
+        {
+            var categories = RepoDbContext.Categories
+                .Select(dbEntity => _mapper.Map(dbEntity))
+                .AsNoTracking();
+            return await categories.ToListAsync();
+        }
+
         // public async Task<IEnumerable<CategoryDalDto>> GetAllWithFinishedTasks()
         // {
         //     var categories = (await GetAll()).ToList();

@@ -8,6 +8,5 @@ namespace Contracts.BLL.App.Services
 {
     public interface ICommentService : ICommentRepository<CommentBllDto>
     {
-        Task<IEnumerable<CommentBllDto>> GetCommentsForFeature(Guid featureId);
     }
 }

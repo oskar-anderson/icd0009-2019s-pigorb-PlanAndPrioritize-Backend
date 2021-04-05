@@ -28,6 +28,8 @@ namespace BLL.App.DTO.Mappers
                 AppUserId = feature.AppUserId,
                 AppUser = CreateAppUserBllDto(feature.AppUser),
                 TimeCreated = feature.TimeCreated,
+                CreatedById = feature.CreatedById,
+                CreatedBy = CreateAppUserBllDto(feature.CreatedBy),
                 LastEdited = feature.LastEdited,
                 ChangeLog = feature.ChangeLog,
                 Comments = feature.Comments?.Select(c => new CommentBllDto

@@ -15,6 +15,8 @@ namespace Domain
 
         public ICollection<Feature>? Features { get; set; }
         
+        public ICollection<Feature>? FeaturesCreated { get; set; }
+        
         public ICollection<UserInVoting>? UserInVotings { get; set; }
         
         public ICollection<UsersFeaturePriority>? UsersFeaturePriorities { get; set; }

@@ -15,7 +15,6 @@ namespace WebApp.ApiControllers._1._0.Identity
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]/[action]")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
     public class UserManagerController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
@@ -45,6 +44,7 @@ namespace WebApp.ApiControllers._1._0.Identity
         /// <response code="404">The AppUser object type does not exist.</response>
         [ProducesResponseType( typeof( IEnumerable<AppUser> ), 200 )]
         [ProducesResponseType( 404 )]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "User, Admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserIndexDto>>> GetUsers()
         {
@@ -70,12 +70,13 @@ namespace WebApp.ApiControllers._1._0.Identity
                 {
                     Id = user.Id,
                     Email = user.Email,
-                    //FirstLastName = user.FirstLastName,
+                    FirstLastName = user.FirstName + " " + user.LastName,
                     Roles = userEmailsWithRoles[user.Email]
                 }).ToListAsync();
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<RoleDto>>> GetRoles()
         {
             var roles = _roleManager.Roles.AsQueryable();
@@ -87,6 +88,7 @@ namespace WebApp.ApiControllers._1._0.Identity
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult<AppUser>> CreateUser(UserCreateDto model)
         {
             var role = await _roleManager.FindByNameAsync(model.RoleName);
@@ -132,6 +134,7 @@ namespace WebApp.ApiControllers._1._0.Identity
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult<AppUser>> CreateRole(RoleDto model)
         {
             var role = new AppRole {Name = model.RoleName};
@@ -155,6 +158,7 @@ namespace WebApp.ApiControllers._1._0.Identity
         }
         
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult<AppUser>> DeleteUser(UserDeleteDto userDeleteDTO)
         {
             var user = await _userManager.FindByEmailAsync(userDeleteDTO.Email);
@@ -191,6 +195,7 @@ namespace WebApp.ApiControllers._1._0.Identity
         }
         
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult<AppUser>> DeleteRole(RoleDto roleDTO)
         {
             if (roleDTO.RoleName == null)
@@ -219,6 +224,7 @@ namespace WebApp.ApiControllers._1._0.Identity
         }
         
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult<AppUser>> AddRoleToUser(UserRoleDto userRoleDTO)
         {
             var user = await _userManager.FindByEmailAsync(userRoleDTO.Email);
@@ -248,6 +254,7 @@ namespace WebApp.ApiControllers._1._0.Identity
         }
         
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<ActionResult<AppUser>> RemoveRoleFromUser(UserRoleDto userRoleDTO)
         {
             var user = await _userManager.FindByEmailAsync(userRoleDTO.Email);
@@ -275,7 +282,5 @@ namespace WebApp.ApiControllers._1._0.Identity
             _logger.LogInformation($"Role {userRoleDTO.RoleName} remover!");
             return Ok(result);
         }
-        
-
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Classifiers;
 using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
 
@@ -19,25 +20,30 @@ namespace Domain
         public string? Description { get; set; }
 
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime StartTime { get; set; }
+        public DateTime? StartTime { get; set; }
         
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime EndTime { get; set; }
+        public DateTime? EndTime { get; set; }
 
         public int Duration { get; set; }
 
-        public Guid? CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
         public Category? Category { get; set; }
 
         public FeatureStatus FeatureStatus { get; set; }
 
         public Guid? AppUserId { get; set; }
+        
+        [InverseProperty("Features")]
         public AppUser? AppUser { get; set; }
 
         public DateTime TimeCreated { get; set; }
         
+        public Guid CreatedById { get; set; }
+        
+        [InverseProperty("FeaturesCreated")]
+        public AppUser? CreatedBy { get; set; }
+
         public DateTime LastEdited { get; set; }
 
         public string? ChangeLog { get; set; }
