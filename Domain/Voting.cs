@@ -16,9 +16,7 @@ namespace Domain
         public DateTime StartTime { get; set; }
         
         public DateTime EndTime { get; set; }
-
-        public VotingStatus VotingStatus { get; set; }
-
+        
         public ICollection<UserInVoting>? UserInVotings { get; set; }
         
         public ICollection<FeatureInVoting>? FeatureInVotings { get; set; }

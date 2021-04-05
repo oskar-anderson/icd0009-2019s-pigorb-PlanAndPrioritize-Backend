@@ -31,6 +31,7 @@ namespace API.DTO.v1.Mappers
             MapperConfigurationExpression.CreateMap<UserInVotingApiDto, UserInVotingBllDto>();
             MapperConfigurationExpression.CreateMap<UsersFeaturePriorityApiDto, UsersFeaturePriorityBllDto>();
             MapperConfigurationExpression.CreateMap<VotingApiDto, VotingBllDto>();
+            MapperConfigurationExpression.CreateMap<VotingCreateApiDto, VotingBllDto>();
             
             Mapper = new Mapper(new MapperConfiguration(MapperConfigurationExpression));
         }

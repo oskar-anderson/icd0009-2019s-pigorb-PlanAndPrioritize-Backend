@@ -8,9 +8,9 @@ namespace DAL.App.DTO
         public Guid Id { get; set; }
         
         public Guid AppUserId { get; set; }
-        // public AppUserDalDto? AppUser { get; set; }
+        public AppUserDalDto? AppUser { get; set; }
 
         public Guid VotingId { get; set; }
-        // public VotingDalDto? Voting { get; set; }
+        public VotingDalDto? Voting { get; set; }
     }
 }

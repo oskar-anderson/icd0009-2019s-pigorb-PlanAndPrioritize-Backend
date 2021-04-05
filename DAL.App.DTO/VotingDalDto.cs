@@ -1,5 +1,5 @@
 using System;
-using Classifiers;
+using System.Collections.Generic;
 using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
 
 namespace DAL.App.DTO
@@ -15,11 +15,9 @@ namespace DAL.App.DTO
         public DateTime StartTime { get; set; }
         
         public DateTime EndTime { get; set; }
-
-        public VotingStatus VotingStatus { get; set; }
-
-        // public ICollection<UserInVotingDalDto>? UserInVotings { get; set; }
-        //
-        // public ICollection<FeatureInVotingDalDto>? FeatureInVotings { get; set; }
+        
+        public ICollection<UserInVotingDalDto>? UserInVotings { get; set; }
+        
+        public ICollection<FeatureInVotingDalDto>? FeatureInVotings { get; set; }
     }
 }

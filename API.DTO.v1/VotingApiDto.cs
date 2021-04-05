@@ -1,12 +1,9 @@
 using System;
-using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
 
 namespace API.DTO.v1
 {
-    public class VotingApiDto : IDomainBaseEntity<Guid>
+    public class VotingCreateApiDto
     {
-        public Guid Id { get; set; }
-        
         public string Title { get; set; } = default!;
 
         public string? Description { get; set; }
@@ -14,11 +11,12 @@ namespace API.DTO.v1
         public DateTime StartTime { get; set; }
         
         public DateTime EndTime { get; set; }
+    }
 
-        public string VotingStatus { get; set; } = default!;
+    public class VotingApiDto : VotingCreateApiDto
+    {
+        public Guid Id { get; set; }
         
-        // public ICollection<UserInVotingApiDto>? UserInVotings { get; set; }
-        //
-        // public ICollection<FeatureInVotingApiDto>? FeatureInVotings { get; set; }
+        public string VotingStatus { get; set; } = default!;
     }
 }

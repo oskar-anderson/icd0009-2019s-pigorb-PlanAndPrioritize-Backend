@@ -60,8 +60,7 @@ namespace DAL.App.DTO.Mappers
                      Title = f.Voting.Title,
                      Description = f.Voting.Description,
                      StartTime = f.Voting.StartTime,
-                     EndTime = f.Voting.EndTime,
-                     VotingStatus = f.Voting.VotingStatus
+                     EndTime = f.Voting.EndTime
                     },
                     FeatureId = f.FeatureId
                 }).ToList()

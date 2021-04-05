@@ -21,7 +21,7 @@ namespace DAL.App.DTO
         public VotingDalDto? Voting { get; set; }
 
         public Guid FeatureId { get; set; }
-        // public FeatureDalDto? Feature { get; set; }
+        public FeatureDalDto? Feature { get; set; }
 
         // public ICollection<UsersFeaturePriorityDalDto>? UsersFeaturePriorities { get; set; }
     }

@@ -8,9 +8,9 @@ namespace BLL.App.DTO
         public Guid Id { get; set; }
         
         public Guid AppUserId { get; set; }
-        // public AppUserBllDto? AppUser { get; set; }
+        public AppUserBllDto? AppUser { get; set; }
 
         public Guid VotingId { get; set; }
-        // public VotingBllDto? Voting { get; set; }
+        public VotingBllDto? Voting { get; set; }
     }
 }
