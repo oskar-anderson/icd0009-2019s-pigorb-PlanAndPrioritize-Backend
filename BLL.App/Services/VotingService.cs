@@ -52,6 +52,17 @@ namespace BLL.App.Services
             return _mapper.Map(ServiceRepository.Edit(_mapper.Map(entity)));
         }
 
+        public async Task<IEnumerable<VotingBllDto>> GetVotingsForFeature(Guid featureId)
+        {
+            var votings = (await ServiceRepository.GetAll()).Select(dalEntity => _mapper.MapVoting(dalEntity));
+            return votings.ToList().FindAll(v => HasFeature(v, featureId));
+        }
+        
+        private bool HasFeature(VotingBllDto feature, Guid featureId)
+        {
+            return feature.FeatureInVotings != null && feature.FeatureInVotings.ToList().Any(f => f.FeatureId == featureId);
+        }
+
         private VotingBllDto WithVotingStatus(VotingBllDto voting)
         {
             if (voting.StartTime < DateTime.Now)

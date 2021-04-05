@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using BLL.App.DTO;
 using BLL.App.DTO.Mappers;
 using Contracts.BLL.App.Services;
@@ -17,6 +19,18 @@ namespace BLL.App.Services
             : base(unitOfWork, new BLLUserInVotingMapper(), unitOfWork.UserInVotings)
         {
         }
-        
+
+        public void AddUsersToVoting(Guid votingId, ICollection<Guid> users)
+        {
+            foreach (var userId in users)
+            {
+                var userInVoting = new UserInVotingDalDto
+                {
+                    VotingId = votingId,
+                    AppUserId = userId
+                };
+                ServiceRepository.Add(userInVoting);
+            }
+        }
     }
 }

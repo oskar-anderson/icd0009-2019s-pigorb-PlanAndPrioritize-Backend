@@ -58,6 +58,17 @@ namespace BLL.App.Services
             return _mapper.Map(ServiceRepository.Edit(_mapper.Map(entity)));
         }
 
+        public async Task<IEnumerable<FeatureBllDto>> GetFeaturesForVoting(Guid votingId)
+        {
+            var features = (await ServiceRepository.GetAll()).Select(dalEntity => _mapper.MapFeature(dalEntity));
+            return features.ToList().FindAll(f => IsInVoting(f, votingId));
+        }
+        
+        private bool IsInVoting(FeatureBllDto feature, Guid votingId)
+        {
+            return feature.FeatureInVotings != null && feature.FeatureInVotings.ToList().Any(f => f.VotingId == votingId);
+        }
+
         public FeatureBllDto AddWithMetaData(FeatureBllDto entity, Guid userId)
         {
             entity.CreatedById = userId;
@@ -217,6 +228,5 @@ namespace BLL.App.Services
         {
             return date == null ? "" : date.Value.ToString("dd.MM.yyyy HH:mm");
         }
-
     }
 }

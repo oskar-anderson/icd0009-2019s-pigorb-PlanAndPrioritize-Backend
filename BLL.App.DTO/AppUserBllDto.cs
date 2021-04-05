@@ -12,14 +12,8 @@ namespace BLL.App.DTO
         
         public string LastName { get; set; } = default!;
         
-        public DateTime LastLogin { get; set; }
-
-        // public ICollection<CommentBllDto>? Comments { get; set; }
-        //
-        // public ICollection<FeatureBllDto>? Features { get; set; }
-        //
-        // public ICollection<UserInVotingBllDto>? UserInVotings { get; set; }
-        //
-        // public ICollection<UsersFeaturePriorityBllDto>? UsersFeaturePriorities { get; set; }
+        public string Email { get; set; } = default!;
+        
+        public ICollection<UserInVotingBllDto>? UserInVotings { get; set; }
     }
 }

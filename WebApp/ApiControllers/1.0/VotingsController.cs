@@ -34,6 +34,15 @@ namespace WebApp.ApiControllers._1._0
             
             return Ok(votings);
         }
+        
+        [HttpGet("{id}")]
+        public async Task<ActionResult<IEnumerable<VotingApiDto>>> GetVotingsForFeature(Guid id)
+        {
+            var votings = (await _bll.Votings.GetVotingsForFeature(id))
+                .Select(bllEntity => _mapper.MapVoting(bllEntity));
+            
+            return Ok(votings);
+        }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<VotingApiDto>> GetVoting(Guid id)
@@ -85,6 +94,10 @@ namespace WebApp.ApiControllers._1._0
         {
             var voting = _mapper.MapVotingCreate(votingDto);
             _bll.Votings.Add(voting);
+            await _bll.SaveChangesAsync();
+
+            _bll.UserInVotings.AddUsersToVoting(voting.Id, votingDto.Users);
+            _bll.FeatureInVotings.AddFeaturesToVoting(voting.Id, votingDto.Features);
             await _bll.SaveChangesAsync();
 
             return Ok(voting);

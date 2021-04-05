@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DAL.App.DTO;
 using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
@@ -13,5 +14,6 @@ namespace Contracts.DAL.App.Repositories
     public interface IAppUserRepository<TDALEntity> : IBaseRepository<TDALEntity>
         where TDALEntity : class, IDomainBaseEntity<Guid>, new()
     {
+        Task<IEnumerable<TDALEntity>> GetUsers();
     }
 }

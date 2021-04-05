@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BLL.App.DTO;
@@ -7,5 +8,6 @@ namespace Contracts.BLL.App.Services
 {
     public interface IVotingService : IVotingRepository<VotingBllDto>
     {
+        Task<IEnumerable<VotingBllDto>> GetVotingsForFeature(Guid id);
     }
 }

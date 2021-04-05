@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BLL.App.DTO;
 using BLL.App.DTO.Mappers;
@@ -17,6 +19,22 @@ namespace BLL.App.Services
         public AppUserService(IAppUnitOfWork unitOfWork)
             : base(unitOfWork, new BLLAppUserMapper(), unitOfWork.AppUsers)
         {
+        }
+
+        public async Task<IEnumerable<AppUserBllDto>> GetUsersForVoting(Guid votingId)
+        {
+            var users = await GetUsers();
+            return users.ToList().FindAll(u => IsInVoting(u, votingId));
+        }
+        
+        private bool IsInVoting(AppUserBllDto user, Guid votingId)
+        {
+            return user.UserInVotings != null && user.UserInVotings.ToList().Any(u => u.VotingId == votingId);
+        }
+
+        public async Task<IEnumerable<AppUserBllDto>> GetUsers()
+        {
+            return (await ServiceRepository.GetUsers()).Select(dalEntity => _mapper.MapUser(dalEntity));
         }
     }
 }

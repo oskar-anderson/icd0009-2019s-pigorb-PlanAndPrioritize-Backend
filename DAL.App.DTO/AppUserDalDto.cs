@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
 
 namespace DAL.App.DTO
@@ -11,14 +12,8 @@ namespace DAL.App.DTO
         
         public string LastName { get; set; } = default!;
         
-        public DateTime LastLogin { get; set; }
-
-        // public ICollection<CommentDalDto>? Comments { get; set; }
-        //
-        // public ICollection<FeatureDalDto>? Features { get; set; }
-        //
-        // public ICollection<UserInVotingDalDto>? UserInVotings { get; set; }
-        //
-        // public ICollection<UsersFeaturePriorityDalDto>? UsersFeaturePriorities { get; set; }
+        public string Email { get; set; } = default!;
+        
+        public ICollection<UserInVotingDalDto>? UserInVotings { get; set; }
     }
 }

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using BLL.App.DTO;
 using BLL.App.DTO.Mappers;
 using Contracts.BLL.App.Services;
@@ -18,6 +20,18 @@ namespace BLL.App.Services
             : base(unitOfWork, new BLLFeatureInVotingMapper(), unitOfWork.FeatureInVotings)
         {
         }
-        
+
+        public void AddFeaturesToVoting(Guid votingId, ICollection<Guid> features)
+        {
+            foreach (var featureId in features)
+            {
+                var featureInVoting = new FeatureInVotingDalDto
+                {
+                    VotingId = votingId,
+                    FeatureId = featureId
+                };
+                ServiceRepository.Add(featureInVoting);
+            }
+        }
     }
 }

@@ -15,7 +15,7 @@ namespace Contracts.BLL.App.Services
 
         FeatureBllDto ConstructEditedFeatureWithChangeLog(FeatureBllDto bllFeature, FeatureEditApiDto featureDto, 
             string userName, CategoryBllDto category, AppUserBllDto? assignee);
-
-        Task<FeatureBllDto> GetLatestFeature();
+        
+        Task<IEnumerable<FeatureBllDto>> GetFeaturesForVoting(Guid votingId);
     }
 }

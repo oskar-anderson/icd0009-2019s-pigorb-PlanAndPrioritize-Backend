@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 using API.DTO.v1;
 using API.DTO.v1.Mappers;
 using BLL.App.DTO;
-using Classifiers;
 using Contracts.BLL.App;
-using Domain;
 using Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -31,18 +29,20 @@ namespace WebApp.ApiControllers._1._0
             _bll = bll;
             _mapper = new DTOFeatureMapper();
         }
-        
-        public async Task<ActionResult<IEnumerable<FeatureApiDto>>> GetFeatures()
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<FeatureApiDto>>> GetFeaturesForList()
         {
-            var features = (await _bll.Features.GetAll())
+            var features = (await _bll.Features.GetAllWithoutCollections())
                 .Select(bllEntity => _mapper.MapFeature(bllEntity));
             
             return Ok(features);
         }
         
-        public async Task<ActionResult<IEnumerable<FeatureApiDto>>> GetFeaturesForList()
+        [HttpGet("{id}")]
+        public async Task<ActionResult<IEnumerable<FeatureApiDto>>> GetFeaturesForVoting(Guid id)
         {
-            var features = (await _bll.Features.GetAllWithoutCollections())
+            var features = (await _bll.Features.GetFeaturesForVoting(id))
                 .Select(bllEntity => _mapper.MapFeature(bllEntity));
             
             return Ok(features);

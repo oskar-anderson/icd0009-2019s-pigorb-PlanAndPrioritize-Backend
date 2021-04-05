@@ -24,7 +24,8 @@ namespace WebApp.ApiControllers._1._0
         public CategoriesController(IAppBLL bll)
         {
             _bll = bll;
-            _mapper = new DTOCategoryMapper();        }
+            _mapper = new DTOCategoryMapper();
+        }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CategoryApiDto>>> GetCategories()

@@ -23,7 +23,7 @@ namespace API.DTO.v1.Mappers
             return status switch
             {
                 VotingStatus.NotOpenYet => "Not open yet",
-                VotingStatus.Open => "open",
+                VotingStatus.Open => "Open",
                 VotingStatus.Closed => "Closed",
                 _ => "Incorrect feature status value"
             };

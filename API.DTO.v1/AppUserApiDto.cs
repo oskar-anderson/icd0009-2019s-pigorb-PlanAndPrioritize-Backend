@@ -1,9 +1,8 @@
 ﻿using System;
-using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
 
 namespace API.DTO.v1
 {
-    public class AppUserApiDto : IDomainBaseEntity<Guid> // Duplicate
+    public class AppUserApiDto
     {
         public Guid Id { get; set; }
         
@@ -11,12 +10,6 @@ namespace API.DTO.v1
         
         public string LastName { get; set; } = default!;
         
-        // public ICollection<CommentApiDto>? Comments { get; set; }
-        //
-        // public ICollection<FeatureApiDto>? Features { get; set; }
-        //
-        // public ICollection<UserInVotingApiDto>? UserInVotings { get; set; }
-        //
-        // public ICollection<UsersFeaturePriorityApiDto>? UsersFeaturePriorities { get; set; }
+        public string Email { get; set; } = default!;
     }
 }
