@@ -20,9 +20,11 @@ namespace WebApp.ApiControllers._1._0
     {
         private readonly IAppBLL _bll;
         private readonly DTOVotingMapper _mapper;
+        private readonly DTOFeatureInVotingMapper _fMapper;
         public VotingsController(IAppBLL bll)
         {
             _bll = bll;
+            _fMapper = new DTOFeatureInVotingMapper();
             _mapper = new DTOVotingMapper();
         }
 
@@ -31,6 +33,15 @@ namespace WebApp.ApiControllers._1._0
         {
             var votings = (await _bll.Votings.GetAll())
                 .Select(bllEntity => _mapper.MapVoting(bllEntity));
+            
+            return Ok(votings);
+        }
+        
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<VotingApiDto>>> GetActiveVotings()
+        {
+            var votings = (await _bll.Votings.GetActiveVotings())
+                .Select(bllEntity => _mapper.Map(bllEntity));
             
             return Ok(votings);
         }
@@ -90,6 +101,16 @@ namespace WebApp.ApiControllers._1._0
         }
         
         [HttpPost]
+        public async Task<ActionResult<FeatureInVotingApiDto>> AddFeatureToVoting(FeatureInVotingCreateApiDto dto)
+        {
+            var featureInVoting = _fMapper.MapFeatureInVotingCreate(dto);
+            _bll.FeatureInVotings.Add(featureInVoting);
+            await _bll.SaveChangesAsync();
+            
+            return Ok(featureInVoting);
+        }
+        
+        [HttpPost]
         public async Task<ActionResult<VotingApiDto>> CreateVoting(VotingCreateApiDto votingDto)
         {
             var voting = _mapper.MapVotingCreate(votingDto);
@@ -117,6 +138,38 @@ namespace WebApp.ApiControllers._1._0
             await _bll.SaveChangesAsync();
 
             return Ok(voting);
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> RemoveFeature(FeatureInVotingCreateApiDto dto)
+        {
+            var featureInVoting = await _bll.FeatureInVotings.FindFeatureInVoting(dto.FeatureId, dto.VotingId);
+            
+            if (featureInVoting == null)
+            {
+                return NotFound();
+            }
+
+            _bll.FeatureInVotings.Remove(featureInVoting);
+            await _bll.SaveChangesAsync();
+
+            return Ok(dto);
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> RemoveUser(UserInVotingRemoveApiDto dto)
+        {
+            var userInVoting = await _bll.UserInVotings.FindUserInVoting(dto.AppUserId, dto.VotingId);
+            
+            if (userInVoting == null)
+            {
+                return NotFound();
+            }
+
+            _bll.UserInVotings.Remove(userInVoting);
+            await _bll.SaveChangesAsync();
+
+            return Ok(dto);
         }
     }
 }

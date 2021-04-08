@@ -24,7 +24,12 @@ namespace BLL.App.Services
 
         public async Task<IEnumerable<VotingBllDto>> GetAll()
         {
-            return (await ServiceRepository.GetAll()).Select(dalEntity => _mapper.MapVoting(dalEntity));
+            return (await ServiceRepository.GetAll()).Select(dalEntity => WithVotingStatus(_mapper.MapVoting(dalEntity)));
+        }
+
+        public async Task<IEnumerable<VotingBllDto>> GetActiveVotings()
+        {
+            return (await ServiceRepository.GetActiveVotings()).Select(dalEntity => _mapper.Map(dalEntity));
         }
 
         public async Task<IEnumerable<VotingBllDto>> GetAllPlain()
@@ -65,12 +70,18 @@ namespace BLL.App.Services
 
         private VotingBllDto WithVotingStatus(VotingBllDto voting)
         {
-            if (voting.StartTime < DateTime.Now)
+            if (voting.StartTime < DateTime.Now && voting.EndTime > DateTime.Now)
+            {
+                voting.VotingStatus = VotingStatus.Open;
+            }
+            else if (voting.StartTime < DateTime.Now && voting.EndTime < DateTime.Now)
+            {
+                voting.VotingStatus = VotingStatus.Closed;
+            }
+            else
             {
                 voting.VotingStatus = VotingStatus.NotOpenYet;
             }
-            voting.VotingStatus = voting.EndTime < DateTime.Now ? VotingStatus.Closed : VotingStatus.Open;
-
             return voting;
         }
     }

@@ -1,9 +1,8 @@
 using System;
-using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
 
 namespace API.DTO.v1
 {
-    public class FeatureInVotingApiDto : IDomainBaseEntity<Guid>
+    public class FeatureInVotingApiDto
     {
         public Guid Id { get; set; }
         
@@ -24,5 +23,12 @@ namespace API.DTO.v1
         // public FeatureApiDto? Feature { get; set; }
 
         // public ICollection<UsersFeaturePriorityApiDto>? UsersFeaturePriorities { get; set; }
+    }
+    
+    public class FeatureInVotingCreateApiDto
+    {
+        public Guid FeatureId { get; set; }
+
+        public Guid VotingId { get; set; }
     }
 }

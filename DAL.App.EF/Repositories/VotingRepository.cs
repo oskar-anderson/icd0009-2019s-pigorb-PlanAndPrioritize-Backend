@@ -31,6 +31,15 @@ namespace DAL.App.EF.Repositories
             return await votings.ToListAsync();
         }
 
+        public async Task<IEnumerable<VotingDalDto>> GetActiveVotings()
+        {
+            var votings = RepoDbContext.Votings
+                .Where(v => v.EndTime > DateTime.Now)
+                .Select(dbEntity => _mapper.Map(dbEntity))
+                .AsNoTracking();
+            return await votings.ToListAsync();
+        }
+
         public async Task<IEnumerable<VotingDalDto>> GetAllPlain()
         {
             var votings = RepoDbContext.Votings

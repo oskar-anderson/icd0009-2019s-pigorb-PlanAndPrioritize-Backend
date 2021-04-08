@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using BLL.App.DTO;
 using BLL.App.DTO.Mappers;
 using Contracts.BLL.App.Services;
@@ -31,6 +32,11 @@ namespace BLL.App.Services
                 };
                 ServiceRepository.Add(userInVoting);
             }
+        }
+
+        public async Task<UserInVotingBllDto> FindUserInVoting(Guid userId, Guid votingId)
+        {
+            return _mapper.Map(await ServiceRepository.FindUserInVoting(userId, votingId));
         }
     }
 }
