@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Classifiers;
 using Contracts.DAL.App.Repositories;
 using DAL.App.DTO;
 using DAL.App.DTO.Mappers;
@@ -22,7 +21,7 @@ namespace DAL.App.EF.Repositories
         
         public async Task<IEnumerable<CategoryDalDto>> GetAll()
         {
-            var categories = RepoDbContext.Categories
+            var categories = RepoDbSet
                 .Include(c => c.Features)
                 //.AsSplitQuery()
                 .Select(dbEntity => _mapper.Map(dbEntity))
@@ -32,38 +31,12 @@ namespace DAL.App.EF.Repositories
 
         public async Task<IEnumerable<CategoryDalDto>> GetAllPlain()
         {
-            var categories = RepoDbContext.Categories
+            var categories = RepoDbSet
                 .Select(dbEntity => _mapper.Map(dbEntity))
                 .AsNoTracking();
             return await categories.ToListAsync();
         }
 
-        // public async Task<IEnumerable<CategoryDalDto>> GetAllWithFinishedTasks()
-        // {
-        //     var categories = (await GetAll()).ToList();
-        //     foreach (var categoryDalDto in categories)
-        //     {
-        //         var finishedFeatures = categoryDalDto.Features?.ToList()
-        //             .FindAll(f => f.FeatureStatus == FeatureStatus.Closed);
-        //         categoryDalDto.Features = finishedFeatures;
-        //     }
-        //
-        //     return categories;
-        // }
-        //
-        // public async Task<IEnumerable<CategoryDalDto>> GetAllInProgressTasks()
-        // {
-        //     var categories = (await GetAll()).ToList();
-        //     foreach (var categoryDalDto in categories)
-        //     {
-        //         var finishedFeatures = categoryDalDto.Features?.ToList()
-        //             .FindAll(f => f.FeatureStatus != FeatureStatus.Closed && f.FeatureStatus != FeatureStatus.NotStarted);
-        //         categoryDalDto.Features = finishedFeatures;
-        //     }
-        //
-        //     return categories;
-        // }
-        
         public async Task<bool> Exists(Guid id)
         {
             return await RepoDbSet.AnyAsync(a => a.Id == id);

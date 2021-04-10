@@ -21,7 +21,7 @@ namespace DAL.App.EF.Repositories
 
         public async Task<IEnumerable<VotingDalDto>> GetAll()
         {
-            var votings = RepoDbContext.Votings
+            var votings = RepoDbSet
                 .Include(v => v.FeatureInVotings)
                     .ThenInclude(v => v.Feature)
                 .Include(v => v.UserInVotings)
@@ -33,21 +33,34 @@ namespace DAL.App.EF.Repositories
 
         public async Task<IEnumerable<VotingDalDto>> GetActiveVotings()
         {
-            var votings = RepoDbContext.Votings
+            var votings = RepoDbSet
                 .Where(v => v.EndTime > DateTime.Now)
                 .Select(dbEntity => _mapper.Map(dbEntity))
                 .AsNoTracking();
             return await votings.ToListAsync();
         }
 
-        public async Task<IEnumerable<VotingDalDto>> GetAllPlain()
+        public async Task<IEnumerable<VotingDalDto>> GetActiveVotingsWithCollections()
         {
-            var votings = RepoDbContext.Votings
-                .Select(dbEntity => _mapper.Map(dbEntity))
+            var votings = RepoDbSet
+                .Where(v => v.EndTime > DateTime.Now)
+                .Include(v => v.FeatureInVotings)
+                    .ThenInclude(v => v.Feature)
+                .Include(v => v.UserInVotings)
+                    .ThenInclude(uv => uv.AppUser)
+                .Select(dbEntity => _mapper.MapVoting(dbEntity))
                 .AsNoTracking();
             return await votings.ToListAsync();
         }
 
+        public async Task<IEnumerable<VotingDalDto>> GetAllPlain()
+        {
+            var votings = RepoDbSet
+                .Select(dbEntity => _mapper.Map(dbEntity))
+                .AsNoTracking();
+            return await votings.ToListAsync();
+        }
+        
         public async Task<bool> Exists(Guid id)
         {
             return await RepoDbSet.AnyAsync(a => a.Id == id);

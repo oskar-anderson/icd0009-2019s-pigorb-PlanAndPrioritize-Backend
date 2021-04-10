@@ -34,5 +34,14 @@ namespace WebApp.ApiControllers._1._0
             
             return Ok(users);
         }
+        
+        [HttpGet("{id}")]
+        public async Task<ActionResult<IEnumerable<AppUserApiDto>>> GetUsersNotInVoting(Guid id)
+        {
+            var users = (await _bll.AppUsers.GetUsersNotInVoting(id))
+                .Select(bllEntity => _mapper.Map(bllEntity));
+            
+            return Ok(users);
+        }
     }
 }

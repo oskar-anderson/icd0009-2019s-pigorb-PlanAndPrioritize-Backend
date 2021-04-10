@@ -18,6 +18,38 @@ namespace API.DTO.v1.Mappers
             return voting;
         }
         
+        public VotingEditApiDto MapVotingEdit(VotingEditBllDto bllDTO)
+        {
+            var voting = Mapper.Map<VotingEditBllDto, VotingEditApiDto>(bllDTO);
+            voting.VotingStatus = MapFromVotingStatus(bllDTO.VotingStatus);
+            
+            return voting;
+        }
+        
+        public VotingBllDto MapFromVotingEdit(VotingEditApiDto apiDto)
+        {
+            return new VotingBllDto
+            {
+                Id = apiDto.Id,
+                Title = apiDto.Title,
+                Description = apiDto.Description,
+                StartTime = apiDto.StartTime,
+                EndTime = apiDto.EndTime,
+                VotingStatus = MapToVotingStatus(apiDto.VotingStatus)
+            };
+        }
+
+        private VotingStatus MapToVotingStatus(string status)
+        {
+            return status switch
+            {
+                "Not open yet" => VotingStatus.NotOpenYet,
+                "Open" => VotingStatus.Open,
+                "Closed" => VotingStatus.Closed,
+                _ => VotingStatus.NotOpenYet
+            };
+        }
+
         private string MapFromVotingStatus(VotingStatus status)
         {
             return status switch

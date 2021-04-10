@@ -16,6 +16,7 @@ namespace Contracts.DAL.App.Repositories
     {
         Task<IEnumerable<TDALEntity>> GetAll();
         Task<IEnumerable<TDALEntity>> GetActiveVotings();
+        Task<IEnumerable<TDALEntity>> GetActiveVotingsWithCollections();
         Task<IEnumerable<TDALEntity>> GetAllPlain();
         Task<bool> Exists(Guid id);
         Task<TDALEntity> FirstOrDefault(Guid id);

@@ -8,6 +8,6 @@ namespace Contracts.BLL.App.Services
 {
     public interface IUserInVotingService : IUserInVotingRepository<UserInVotingBllDto>
     {
-        void AddUsersToVoting(Guid votingId, ICollection<Guid> votingDtoUsers);
+        void UpdateUsersInVoting(Guid votingId, ICollection<Guid> users);
     }
 }

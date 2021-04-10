@@ -22,10 +22,20 @@ namespace BLL.App.Services
         {
         }
 
-        public void AddFeaturesToVoting(Guid votingId, ICollection<Guid> features)
+        public async void UpdateFeaturesInVoting(Guid votingId, ICollection<Guid> features)
         {
+            var existingFeatures = await GetAllForVoting(votingId);
+            foreach (var feature in existingFeatures)
+            {
+                if (!features.Contains(feature.FeatureId))
+                {
+                    ServiceRepository.Remove(feature);
+                }
+            }
+            
             foreach (var featureId in features)
             {
+                if (await ServiceRepository.Exists(featureId, votingId)) continue;
                 var featureInVoting = new FeatureInVotingDalDto
                 {
                     VotingId = votingId,
@@ -38,6 +48,16 @@ namespace BLL.App.Services
         public async Task<FeatureInVotingBllDto> FindFeatureInVoting(Guid featureId, Guid votingId)
         {
             return _mapper.Map(await ServiceRepository.FindFeatureInVoting(featureId, votingId));
+        }
+
+        public async Task<bool> Exists(Guid featureId, Guid votingId)
+        {
+            return await ServiceRepository.Exists(featureId, votingId);
+        }
+
+        public async Task<IEnumerable<FeatureInVotingDalDto>> GetAllForVoting(Guid votingId)
+        {
+            return await ServiceRepository.GetAllForVoting(votingId);
         }
     }
 }

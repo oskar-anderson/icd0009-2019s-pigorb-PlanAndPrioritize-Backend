@@ -28,9 +28,14 @@ namespace BLL.App.Services
             return (await ServiceRepository.GetAll()).Select(dalEntity => _mapper.Map(dalEntity));
         }
 
-        public async Task<IEnumerable<FeatureBllDto>> GetAllWithoutCollections()
+        public async Task<IEnumerable<FeatureBllDto>> GetAllWithoutCollections(string? search)
         {
-            return (await ServiceRepository.GetAll()).Select(dalEntity => _mapper.Map(dalEntity));
+            return (await ServiceRepository.GetAllWithoutCollections(search)).Select(dalEntity => _mapper.Map(dalEntity));
+        }
+
+        public async Task<IEnumerable<FeatureBllDto>> GetToDoFeatures()
+        {
+            return (await ServiceRepository.GetToDoFeatures()).Select(dalEntity => _mapper.Map(dalEntity));
         }
 
         public async Task<bool> Exists(Guid id)
@@ -63,7 +68,13 @@ namespace BLL.App.Services
             var features = (await ServiceRepository.GetAll()).Select(dalEntity => _mapper.MapFeature(dalEntity));
             return features.ToList().FindAll(f => IsInVoting(f, votingId));
         }
-        
+
+        public async Task<IEnumerable<FeatureBllDto>> GetToDoFeaturesNotInVoting(Guid votingId)
+        {
+            var features = (await ServiceRepository.GetAll()).Select(dalEntity => _mapper.MapFeature(dalEntity));
+            return features.ToList().FindAll(f => f.FeatureStatus == FeatureStatus.NotStarted && !IsInVoting(f, votingId));
+        }
+
         private bool IsInVoting(FeatureBllDto feature, Guid votingId)
         {
             return feature.FeatureInVotings != null && feature.FeatureInVotings.ToList().Any(f => f.VotingId == votingId);

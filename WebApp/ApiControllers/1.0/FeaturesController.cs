@@ -30,10 +30,28 @@ namespace WebApp.ApiControllers._1._0
             _mapper = new DTOFeatureMapper();
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<FeatureApiDto>>> GetFeaturesForList()
+        [HttpGet("{search?}")]
+        public async Task<ActionResult<IEnumerable<FeatureApiDto>>> GetFeaturesForList(string? search)
         {
-            var features = (await _bll.Features.GetAllWithoutCollections())
+            var features = (await _bll.Features.GetAllWithoutCollections(search))
+                .Select(bllEntity => _mapper.MapFeature(bllEntity));
+            
+            return Ok(features);
+        }
+        
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<FeatureApiDto>>> GetToDoFeatures()
+        {
+            var features = (await _bll.Features.GetToDoFeatures())
+                .Select(bllEntity => _mapper.Map(bllEntity));
+            
+            return Ok(features);
+        }
+        
+        [HttpGet("{id}")]
+        public async Task<ActionResult<IEnumerable<FeatureApiDto>>> GetFeaturesNotInVoting(Guid id)
+        {
+            var features = (await _bll.Features.GetToDoFeaturesNotInVoting(id))
                 .Select(bllEntity => _mapper.MapFeature(bllEntity));
             
             return Ok(features);

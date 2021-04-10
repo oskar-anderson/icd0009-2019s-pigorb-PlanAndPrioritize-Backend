@@ -9,5 +9,7 @@ namespace Contracts.BLL.App.Services
     public interface IAppUserService : IAppUserRepository<AppUserBllDto>
     {
         Task<IEnumerable<AppUserBllDto>> GetUsersForVoting(Guid votingId);
+        
+        Task<IEnumerable<AppUserBllDto>> GetUsersNotInVoting(Guid votingId);
     }
 }

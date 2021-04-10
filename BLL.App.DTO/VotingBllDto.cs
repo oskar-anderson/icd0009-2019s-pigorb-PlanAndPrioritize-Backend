@@ -23,4 +23,23 @@ namespace BLL.App.DTO
         
         public ICollection<FeatureInVotingBllDto>? FeatureInVotings { get; set; }
     }
+    
+    public class VotingEditBllDto : IDomainBaseEntity<Guid>
+    {
+        public Guid Id { get; set; }
+        
+        public string Title { get; set; } = default!;
+
+        public string? Description { get; set; }
+
+        public DateTime StartTime { get; set; }
+        
+        public DateTime EndTime { get; set; }
+
+        public VotingStatus VotingStatus { get; set; }
+
+        public ICollection<Guid>? Users { get; set; }
+        
+        public ICollection<Guid>? Features { get; set; }
+    }
 }

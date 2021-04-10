@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DAL.App.DTO;
 using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
@@ -14,5 +15,9 @@ namespace Contracts.DAL.App.Repositories
         where TDALEntity : class, IDomainBaseEntity<Guid>, new()
     {
         Task<TDALEntity> FindFeatureInVoting(Guid featureId, Guid votingId);
+        
+        Task<bool> Exists(Guid featureId, Guid votingId);
+        
+        Task<IEnumerable<FeatureInVotingDalDto>> GetAllForVoting(Guid votingId);
     }
 }

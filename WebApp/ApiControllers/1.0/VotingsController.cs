@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using API.DTO.v1;
 using API.DTO.v1.Mappers;
 using Contracts.BLL.App;
+using Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,10 +22,12 @@ namespace WebApp.ApiControllers._1._0
         private readonly IAppBLL _bll;
         private readonly DTOVotingMapper _mapper;
         private readonly DTOFeatureInVotingMapper _fMapper;
+        private readonly DTOUserInVotingMapper _uMapper;
         public VotingsController(IAppBLL bll)
         {
             _bll = bll;
             _fMapper = new DTOFeatureInVotingMapper();
+            _uMapper = new DTOUserInVotingMapper();
             _mapper = new DTOVotingMapper();
         }
 
@@ -38,10 +41,28 @@ namespace WebApp.ApiControllers._1._0
         }
         
         [HttpGet]
+        public async Task<ActionResult<IEnumerable<VotingApiDto>>> GetAssignedVotings()
+        {
+            var votings = (await _bll.Votings.GetAssignedVotings(User.UserId()))
+                .Select(bllEntity => _mapper.MapVoting(bllEntity));
+            
+            return Ok(votings);
+        }
+        
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<VotingApiDto>>> GetActiveVotings()
         {
             var votings = (await _bll.Votings.GetActiveVotings())
                 .Select(bllEntity => _mapper.Map(bllEntity));
+            
+            return Ok(votings);
+        }
+        
+        [HttpGet("{id}")]
+        public async Task<ActionResult<IEnumerable<VotingApiDto>>> GetActiveVotingsNotInFeature(Guid id)
+        {
+            var votings = (await _bll.Votings.GetActiveVotingsNotInFeature(id))
+                .Select(bllEntity => _mapper.MapVoting(bllEntity));
             
             return Ok(votings);
         }
@@ -68,8 +89,21 @@ namespace WebApp.ApiControllers._1._0
             return Ok(votingDto);
         }
         
+        [HttpGet("{id}")]
+        public async Task<ActionResult<VotingEditApiDto>> GetVotingEdit(Guid id)
+        {
+            var votingDto = _mapper.MapVotingEdit(await _bll.Votings.GetVotingWithIdCollections(id));
+
+            if (votingDto == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(votingDto);
+        }
+        
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditVoting(Guid id, VotingApiDto votingDto)
+        public async Task<IActionResult> EditVoting(Guid id, VotingEditApiDto votingDto)
         {
             if (id != votingDto.Id)
             {
@@ -82,8 +116,10 @@ namespace WebApp.ApiControllers._1._0
                 return BadRequest();
             }
 
-            voting = _mapper.Map(votingDto);
+            voting = _mapper.MapFromVotingEdit(votingDto);
             _bll.Votings.Edit(voting);
+            _bll.UserInVotings.UpdateUsersInVoting(voting.Id, votingDto.Users);
+            _bll.FeatureInVotings.UpdateFeaturesInVoting(voting.Id, votingDto.Features);
             
             try
             {
@@ -111,14 +147,24 @@ namespace WebApp.ApiControllers._1._0
         }
         
         [HttpPost]
+        public async Task<ActionResult<UserInVotingApiDto>> AddUserToVoting(UserInVotingCreateApiDto dto)
+        {
+            var userInVoting = _uMapper.MapUserInVotingCreate(dto);
+            _bll.UserInVotings.Add(userInVoting);
+            await _bll.SaveChangesAsync();
+            
+            return Ok(userInVoting);
+        }
+        
+        [HttpPost]
         public async Task<ActionResult<VotingApiDto>> CreateVoting(VotingCreateApiDto votingDto)
         {
             var voting = _mapper.MapVotingCreate(votingDto);
             _bll.Votings.Add(voting);
             await _bll.SaveChangesAsync();
 
-            _bll.UserInVotings.AddUsersToVoting(voting.Id, votingDto.Users);
-            _bll.FeatureInVotings.AddFeaturesToVoting(voting.Id, votingDto.Features);
+            _bll.UserInVotings.UpdateUsersInVoting(voting.Id, votingDto.Users);
+            _bll.FeatureInVotings.UpdateFeaturesInVoting(voting.Id, votingDto.Features);
             await _bll.SaveChangesAsync();
 
             return Ok(voting);
@@ -157,7 +203,7 @@ namespace WebApp.ApiControllers._1._0
         }
         
         [HttpPost]
-        public async Task<IActionResult> RemoveUser(UserInVotingRemoveApiDto dto)
+        public async Task<IActionResult> RemoveUser(UserInVotingCreateApiDto dto)
         {
             var userInVoting = await _bll.UserInVotings.FindUserInVoting(dto.AppUserId, dto.VotingId);
             

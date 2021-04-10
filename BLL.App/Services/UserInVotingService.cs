@@ -21,10 +21,20 @@ namespace BLL.App.Services
         {
         }
 
-        public void AddUsersToVoting(Guid votingId, ICollection<Guid> users)
+        public async void UpdateUsersInVoting(Guid votingId, ICollection<Guid> users)
         {
+            var existingUsers = await GetAllForVoting(votingId);
+            foreach (var user in existingUsers)
+            {
+                if (!users.Contains(user.AppUserId))
+                {
+                    ServiceRepository.Remove(user);
+                }
+            }
+            
             foreach (var userId in users)
             {
+                if (await ServiceRepository.Exists(userId, votingId)) continue;
                 var userInVoting = new UserInVotingDalDto
                 {
                     VotingId = votingId,
@@ -37,6 +47,16 @@ namespace BLL.App.Services
         public async Task<UserInVotingBllDto> FindUserInVoting(Guid userId, Guid votingId)
         {
             return _mapper.Map(await ServiceRepository.FindUserInVoting(userId, votingId));
+        }
+
+        public async Task<bool> Exists(Guid userId, Guid votingId)
+        {
+            return await ServiceRepository.Exists(userId, votingId);
+        }
+
+        public async Task<IEnumerable<UserInVotingDalDto>> GetAllForVoting(Guid votingId)
+        {
+            return await ServiceRepository.GetAllForVoting(votingId);
         }
     }
 }

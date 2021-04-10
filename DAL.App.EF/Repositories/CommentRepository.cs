@@ -21,7 +21,7 @@ namespace DAL.App.EF.Repositories
 
         public async Task<IEnumerable<CommentDalDto>> GetCommentsForFeature(Guid featureId)
         {
-            var comments = RepoDbContext.Comments
+            var comments = RepoDbSet
                 .Where(c => c.FeatureId == featureId)
                 .Include(c => c.AppUser)
                 .OrderBy(c => c.TimeCreated)

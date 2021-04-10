@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Classifiers;
 using Contracts.DAL.App.Repositories;
 using DAL.App.DTO;
 using DAL.App.DTO.Mappers;
@@ -24,7 +25,7 @@ namespace DAL.App.EF.Repositories
         
         public async Task<IEnumerable<FeatureDalDto>> GetAll()
         {
-            var features = RepoDbContext.Features
+            var features = RepoDbSet
                 .Include(f => f.Category)
                 .Include(f => f.AppUser)
                 .Include(f => f.CreatedBy)
@@ -37,16 +38,45 @@ namespace DAL.App.EF.Repositories
             return await features.ToListAsync();
         }
 
-        public async Task<IEnumerable<FeatureDalDto>> GetAllWithoutCollections()
+        public async Task<IEnumerable<FeatureDalDto>> GetAllWithoutCollections(string? search)
         {
-            var features = RepoDbContext.Features
+            var featuresQuery = RepoDbSet
                 .Include(f => f.Category)
                 .Include(f => f.AppUser)
                 .Select(dbEntity => _mapper.MapFeature(dbEntity))
+                .AsNoTracking()
+                .AsQueryable();
+            
+            var newQuery = featuresQuery
+                .AsEnumerable()
+                .Where(f => ContainsSearch(f, search));
+            
+            newQuery = newQuery.OrderByDescending(f => f.TimeCreated);
+            
+            return newQuery;
+        }
+
+        private bool ContainsSearch(FeatureDalDto feature, string? search)
+        {
+            if (string.IsNullOrEmpty(search))
+            {
+                return true;
+            }
+            search = search.ToLower();
+            return feature.Title.ToLower().Contains(search) || 
+                   feature.Description == null || 
+                   feature.Description.ToLower().Contains(search);
+        }
+
+        public async Task<IEnumerable<FeatureDalDto>> GetToDoFeatures()
+        {
+            var features = RepoDbSet
+                .Where(f => f.FeatureStatus == FeatureStatus.NotStarted)
+                .Select(dbEntity => _mapper.Map(dbEntity))
                 .AsNoTracking();
             return await features.ToListAsync();
         }
-        
+
         public async Task<bool> Exists(Guid id)
         {
             return await RepoDbSet.AnyAsync(a => a.Id == id);

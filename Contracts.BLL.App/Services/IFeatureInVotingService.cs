@@ -7,6 +7,6 @@ namespace Contracts.BLL.App.Services
 {
     public interface IFeatureInVotingService : IFeatureInVotingRepository<FeatureInVotingBllDto>
     {
-        void AddFeaturesToVoting(Guid votingId, ICollection<Guid> votingDtoFeatures);
+        void UpdateFeaturesInVoting(Guid votingId, ICollection<Guid> features);
     }
 }

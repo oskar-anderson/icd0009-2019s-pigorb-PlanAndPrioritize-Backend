@@ -17,5 +17,7 @@ namespace Contracts.BLL.App.Services
             string userName, CategoryBllDto category, AppUserBllDto? assignee);
         
         Task<IEnumerable<FeatureBllDto>> GetFeaturesForVoting(Guid votingId);
+        
+        Task<IEnumerable<FeatureBllDto>> GetToDoFeaturesNotInVoting(Guid votingId);
     }
 }

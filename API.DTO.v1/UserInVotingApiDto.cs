@@ -11,10 +11,8 @@ namespace API.DTO.v1
         public Guid VotingId { get; set; }
     }
     
-    public class UserInVotingRemoveApiDto
+    public class UserInVotingCreateApiDto
     {
-        public Guid Id { get; set; }
-        
         public Guid AppUserId { get; set; }
 
         public Guid VotingId { get; set; }

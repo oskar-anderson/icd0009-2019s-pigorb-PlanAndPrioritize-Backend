@@ -26,7 +26,13 @@ namespace BLL.App.Services
             var users = await GetUsers();
             return users.ToList().FindAll(u => IsInVoting(u, votingId));
         }
-        
+
+        public async Task<IEnumerable<AppUserBllDto>> GetUsersNotInVoting(Guid votingId)
+        {
+            var users = await GetUsers();
+            return users.ToList().FindAll(u => !IsInVoting(u, votingId));
+        }
+
         private bool IsInVoting(AppUserBllDto user, Guid votingId)
         {
             return user.UserInVotings != null && user.UserInVotings.ToList().Any(u => u.VotingId == votingId);

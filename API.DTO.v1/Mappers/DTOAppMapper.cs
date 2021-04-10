@@ -19,6 +19,8 @@ namespace API.DTO.v1.Mappers
             MapperConfigurationExpression.CreateMap<UserInVotingBllDto, UserInVotingApiDto>();
             MapperConfigurationExpression.CreateMap<UsersFeaturePriorityBllDto, UsersFeaturePriorityApiDto>();
             MapperConfigurationExpression.CreateMap<VotingBllDto, VotingApiDto>();
+            MapperConfigurationExpression.CreateMap<VotingEditBllDto, VotingEditApiDto>();
+            MapperConfigurationExpression.CreateMap<VotingEditApiDto, VotingBllDto>();
             
             MapperConfigurationExpression.CreateMap<AppUserApiDto, AppUserBllDto>();
             MapperConfigurationExpression.CreateMap<CategoryApiDto, CategoryBllDto>();
@@ -30,6 +32,7 @@ namespace API.DTO.v1.Mappers
             MapperConfigurationExpression.CreateMap<FeatureInVotingApiDto, FeatureInVotingBllDto>();
             MapperConfigurationExpression.CreateMap<FeatureInVotingCreateApiDto, FeatureInVotingBllDto>();
             MapperConfigurationExpression.CreateMap<UserInVotingApiDto, UserInVotingBllDto>();
+            MapperConfigurationExpression.CreateMap<UserInVotingCreateApiDto, UserInVotingBllDto>();
             MapperConfigurationExpression.CreateMap<UsersFeaturePriorityApiDto, UsersFeaturePriorityBllDto>();
             MapperConfigurationExpression.CreateMap<VotingApiDto, VotingBllDto>();
             MapperConfigurationExpression.CreateMap<VotingCreateApiDto, VotingBllDto>();

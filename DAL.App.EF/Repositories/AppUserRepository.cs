@@ -21,7 +21,7 @@ namespace DAL.App.EF.Repositories
 
         public async Task<IEnumerable<AppUserDalDto>> GetUsers()
         {
-            var users = RepoDbContext.AppUsers
+            var users = RepoDbSet
                 .Include(u => u.UserInVotings)
                     .ThenInclude(uv => uv.Voting)
                 .Select(dbEntity => _mapper.MapUser(dbEntity))

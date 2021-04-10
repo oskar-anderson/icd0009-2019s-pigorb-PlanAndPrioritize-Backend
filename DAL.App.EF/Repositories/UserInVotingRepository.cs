@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contracts.DAL.App.Repositories;
@@ -24,6 +25,20 @@ namespace DAL.App.EF.Repositories
                 .Where(f => f.AppUserId == userId && f.VotingId == votingId)
                 .AsQueryable();
             return Mapper.Map(await query.AsNoTracking().FirstOrDefaultAsync());
+        }
+
+        public async Task<bool> Exists(Guid userId, Guid votingId)
+        {
+            return await RepoDbSet.AnyAsync(uv => uv.AppUserId == userId && uv.VotingId == votingId);
+        }
+
+        public async Task<IEnumerable<UserInVotingDalDto>> GetAllForVoting(Guid votingId)
+        {
+            var userInVotings = RepoDbSet
+                .Where(uv => uv.VotingId == votingId)
+                .Select(dbEntity => _mapper.Map(dbEntity))
+                .AsNoTracking();
+            return await userInVotings.ToListAsync();
         }
     }
 }
