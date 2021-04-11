@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.DTO.v1;
 using API.DTO.v1.Mappers;
+using BLL.App.DTO;
 using Contracts.BLL.App;
 using Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -137,7 +138,7 @@ namespace WebApp.ApiControllers._1._0
         }
         
         [HttpPost]
-        public async Task<ActionResult<FeatureInVotingApiDto>> AddFeatureToVoting(FeatureInVotingCreateApiDto dto)
+        public async Task<ActionResult< FeatureInVotingApiDto>> AddFeatureToVoting(FeatureInVotingCreateApiDto dto)
         {
             var featureInVoting = _fMapper.MapFeatureInVotingCreate(dto);
             _bll.FeatureInVotings.Add(featureInVoting);
@@ -216,6 +217,32 @@ namespace WebApp.ApiControllers._1._0
             await _bll.SaveChangesAsync();
 
             return Ok(dto);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Vote(IEnumerable<UsersFeaturePriorityCreateApiDto> dtos)
+        {
+            var dtoList = dtos.ToList();
+            if (dtoList.Count == 0)
+            {
+                return Ok();
+            }
+
+            Dictionary<Guid, UsersFeaturePriorityCreateApiDto> withFeatureInVotingId = await _bll.FeatureInVotings.GetFeatureInVotingIds(dtoList);
+            _bll.UsersFeaturePriorities.AddUserPriorities(withFeatureInVotingId, User.UserId());
+            await _bll.SaveChangesAsync();
+
+            await _bll.FeatureInVotings.CalculatePriorityValuesForVoting(dtoList.First().VotingId);
+            await _bll.SaveChangesAsync();
+
+            // Values should be calculated only when voting is over?
+            // Or filtering of showing them or not is done on display side?
+            // If is in open votings then don't display size and priority value!!!
+            ICollection<Guid> featureIds = dtoList.Select(dto => dto.Id).ToList();
+            await _bll.Features.CalculateSizeAndPriority(featureIds);
+            await _bll.SaveChangesAsync();
+
+            return Ok();
         }
     }
 }

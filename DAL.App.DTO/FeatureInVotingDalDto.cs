@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
 
 namespace DAL.App.DTO
@@ -23,6 +24,6 @@ namespace DAL.App.DTO
         public Guid FeatureId { get; set; }
         public FeatureDalDto? Feature { get; set; }
 
-        // public ICollection<UsersFeaturePriorityDalDto>? UsersFeaturePriorities { get; set; }
+        public ICollection<UsersFeaturePriorityDalDto>? UsersFeaturePriorities { get; set; }
     }
 }

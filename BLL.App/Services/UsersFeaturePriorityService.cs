@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using API.DTO.v1;
 using BLL.App.DTO;
 using BLL.App.DTO.Mappers;
 using Contracts.BLL.App.Services;
@@ -18,6 +22,31 @@ namespace BLL.App.Services
             : base(unitOfWork, new BLLUsersFeaturePriorityMapper(), unitOfWork.UsersFeaturePriorities)
         {
         }
+
+        public void AddUserPriorities(Dictionary<Guid, UsersFeaturePriorityCreateApiDto> featureInVotings, Guid userId)
+        {
+            foreach (var usersFeaturePriority in featureInVotings.Select(entry => new UsersFeaturePriorityDalDto
+            {
+                Size = entry.Value.TaskSize,
+                BusinessValue = entry.Value.BusinessValue,
+                TimeCriticality = entry.Value.TimeCriticality,
+                RiskOrOpportunity = entry.Value.RiskOrOpportunity,
+                PriorityValue = CalculatePriorityUsingWSJF(entry.Value.TaskSize, entry.Value.BusinessValue, 
+                    entry.Value.TimeCriticality, entry.Value.RiskOrOpportunity),
+                AppUserId = userId,
+                FeatureInVotingId = entry.Key
+            }))
+            {
+                ServiceRepository.Add(usersFeaturePriority);
+            }
+        }
         
+        private decimal CalculatePriorityUsingWSJF(int taskSize, int businessValue, int timeCriticality, int riskOrOpportunity)
+        {
+            var priceOfDelay = Convert.ToDecimal(businessValue) + Convert.ToDecimal(timeCriticality) +
+                               Convert.ToDecimal(riskOrOpportunity);
+            var WSJF = priceOfDelay / Convert.ToDecimal(taskSize);
+            return decimal.Round(WSJF, 2);
+        }
     }
 }

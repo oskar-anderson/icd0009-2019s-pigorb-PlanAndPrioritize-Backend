@@ -19,5 +19,6 @@ namespace Contracts.BLL.App.Services
         Task<IEnumerable<FeatureBllDto>> GetFeaturesForVoting(Guid votingId);
         
         Task<IEnumerable<FeatureBllDto>> GetToDoFeaturesNotInVoting(Guid votingId);
+        Task CalculateSizeAndPriority(ICollection<Guid> keys);
     }
 }

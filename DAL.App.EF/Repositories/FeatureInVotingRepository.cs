@@ -40,5 +40,17 @@ namespace DAL.App.EF.Repositories
                 .AsNoTracking();
             return await featureInVotings.ToListAsync();
         }
+        
+        public async Task<IEnumerable<FeatureInVotingDalDto>> GetAllForVotingWithUserPriorities(Guid votingId)
+        {
+            var featureInVotings = RepoDbSet
+                .Where(fv => fv.VotingId == votingId)
+                .Include(fv => fv.UsersFeaturePriorities)
+                .Select(dbEntity => _mapper.Map(dbEntity))
+                .AsNoTracking();
+            return await featureInVotings.ToListAsync();
+        }
+        
+        
     }
 }

@@ -17,10 +17,8 @@ namespace API.DTO.v1
         public decimal AveragePriorityValue { get; set; }
 
         public Guid VotingId { get; set; }
-        // public VotingApiDto? Voting { get; set; }
 
         public Guid FeatureId { get; set; }
-        // public FeatureApiDto? Feature { get; set; }
 
         // public ICollection<UsersFeaturePriorityApiDto>? UsersFeaturePriorities { get; set; }
     }

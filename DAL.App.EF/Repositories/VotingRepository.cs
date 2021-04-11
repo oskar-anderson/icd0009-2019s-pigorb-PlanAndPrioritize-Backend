@@ -26,6 +26,7 @@ namespace DAL.App.EF.Repositories
                     .ThenInclude(v => v.Feature)
                 .Include(v => v.UserInVotings)
                     .ThenInclude(uv => uv.AppUser)
+                .OrderByDescending(v => v.StartTime)
                 .Select(dbEntity => _mapper.MapVoting(dbEntity))
                 .AsNoTracking();
             return await votings.ToListAsync();
@@ -35,6 +36,7 @@ namespace DAL.App.EF.Repositories
         {
             var votings = RepoDbSet
                 .Where(v => v.EndTime > DateTime.Now)
+                .OrderByDescending(v => v.StartTime)
                 .Select(dbEntity => _mapper.Map(dbEntity))
                 .AsNoTracking();
             return await votings.ToListAsync();
@@ -48,6 +50,7 @@ namespace DAL.App.EF.Repositories
                     .ThenInclude(v => v.Feature)
                 .Include(v => v.UserInVotings)
                     .ThenInclude(uv => uv.AppUser)
+                .OrderByDescending(v => v.StartTime)
                 .Select(dbEntity => _mapper.MapVoting(dbEntity))
                 .AsNoTracking();
             return await votings.ToListAsync();
@@ -56,6 +59,7 @@ namespace DAL.App.EF.Repositories
         public async Task<IEnumerable<VotingDalDto>> GetAllPlain()
         {
             var votings = RepoDbSet
+                .OrderByDescending(v => v.StartTime)
                 .Select(dbEntity => _mapper.Map(dbEntity))
                 .AsNoTracking();
             return await votings.ToListAsync();

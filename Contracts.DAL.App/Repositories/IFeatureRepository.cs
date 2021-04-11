@@ -15,7 +15,7 @@ namespace Contracts.DAL.App.Repositories
         where TDALEntity : class, IDomainBaseEntity<Guid>, new()
     {
         Task<IEnumerable<TDALEntity>> GetAll();
-        Task<IEnumerable<TDALEntity>> GetAllWithoutCollections(string? search);
+        IEnumerable<TDALEntity> GetAllWithoutCollections(string? search);
         Task<IEnumerable<TDALEntity>> GetToDoFeatures();
         Task<bool> Exists(Guid id);
         Task<TDALEntity> FirstOrDefault(Guid id);

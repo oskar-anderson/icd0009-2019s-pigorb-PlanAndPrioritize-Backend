@@ -31,9 +31,9 @@ namespace WebApp.ApiControllers._1._0
         }
 
         [HttpGet("{search?}")]
-        public async Task<ActionResult<IEnumerable<FeatureApiDto>>> GetFeaturesForList(string? search)
+        public ActionResult<IEnumerable<FeatureApiDto>> GetFeaturesForList(string? search)
         {
-            var features = (await _bll.Features.GetAllWithoutCollections(search))
+            var features = _bll.Features.GetAllWithoutCollections(search)
                 .Select(bllEntity => _mapper.MapFeature(bllEntity));
             
             return Ok(features);
@@ -59,6 +59,15 @@ namespace WebApp.ApiControllers._1._0
         
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<FeatureApiDto>>> GetFeaturesForVoting(Guid id)
+        {
+            var features = (await _bll.Features.GetFeaturesForVoting(id))
+                .Select(bllEntity => _mapper.MapFeature(bllEntity));
+            
+            return Ok(features);
+        }
+        
+        [HttpGet("{id}")]
+        public async Task<ActionResult<IEnumerable<FeatureApiDto>>> GetFeaturesWithPriority(Guid id)
         {
             var features = (await _bll.Features.GetFeaturesForVoting(id))
                 .Select(bllEntity => _mapper.MapFeature(bllEntity));

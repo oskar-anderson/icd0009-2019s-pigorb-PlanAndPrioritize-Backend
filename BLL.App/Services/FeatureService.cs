@@ -28,9 +28,9 @@ namespace BLL.App.Services
             return (await ServiceRepository.GetAll()).Select(dalEntity => _mapper.Map(dalEntity));
         }
 
-        public async Task<IEnumerable<FeatureBllDto>> GetAllWithoutCollections(string? search)
+        public IEnumerable<FeatureBllDto> GetAllWithoutCollections(string? search)
         {
-            return (await ServiceRepository.GetAllWithoutCollections(search)).Select(dalEntity => _mapper.Map(dalEntity));
+            return ServiceRepository.GetAllWithoutCollections(search).Select(dalEntity => _mapper.Map(dalEntity));
         }
 
         public async Task<IEnumerable<FeatureBllDto>> GetToDoFeatures()
@@ -73,6 +73,48 @@ namespace BLL.App.Services
         {
             var features = (await ServiceRepository.GetAll()).Select(dalEntity => _mapper.MapFeature(dalEntity));
             return features.ToList().FindAll(f => f.FeatureStatus == FeatureStatus.NotStarted && !IsInVoting(f, votingId));
+        }
+
+        public async Task CalculateSizeAndPriority(ICollection<Guid> featureIds)
+        {
+            foreach (var id in featureIds)
+            {
+                var feature = await ServiceRepository.FirstOrDefault(id);
+                var featureInVotings = feature.FeatureInVotings;
+                if (featureInVotings == null || featureInVotings.Count == 0) continue;
+
+                var changedFeature = new FeatureDalDto
+                {
+                    Id = feature.Id,
+                    Title = feature.Title,
+                    Size = CalculateSize(featureInVotings),
+                    PriorityValue = CalculatePriority(featureInVotings),
+                    Description = feature.Description,
+                    StartTime = feature.StartTime,
+                    EndTime = feature.EndTime,
+                    Duration = feature.Duration,
+                    CategoryId = feature.CategoryId,
+                    FeatureStatus = feature.FeatureStatus,
+                    AppUserId = feature.AppUserId,
+                    TimeCreated = feature.TimeCreated,
+                    CreatedById = feature.CreatedById,
+                    LastEdited = feature.LastEdited,
+                    ChangeLog = feature.ChangeLog
+                };
+                ServiceRepository.Update(changedFeature);
+            }
+        }
+
+        private int CalculateSize(ICollection<FeatureInVotingDalDto> featureInVotings)
+        {
+            var sum = featureInVotings.Sum(fv => fv.AverageSize);
+            return decimal.ToInt32(sum / featureInVotings.Count);
+        }
+        
+        private decimal CalculatePriority(ICollection<FeatureInVotingDalDto> featureInVotings)
+        {
+            var sum = featureInVotings.Sum(fv => fv.AveragePriorityValue);
+            return decimal.Round(sum / featureInVotings.Count, 2);
         }
 
         private bool IsInVoting(FeatureBllDto feature, Guid votingId)

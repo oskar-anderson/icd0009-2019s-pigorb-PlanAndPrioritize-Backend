@@ -19,5 +19,6 @@ namespace Contracts.DAL.App.Repositories
         Task<bool> Exists(Guid featureId, Guid votingId);
         
         Task<IEnumerable<FeatureInVotingDalDto>> GetAllForVoting(Guid votingId);
+        Task<IEnumerable<FeatureInVotingDalDto>> GetAllForVotingWithUserPriorities(Guid votingId);
     }
 }

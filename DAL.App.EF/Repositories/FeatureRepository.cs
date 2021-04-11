@@ -33,12 +33,13 @@ namespace DAL.App.EF.Repositories
                     .ThenInclude(c => c.AppUser)
                 .Include(f => f.FeatureInVotings)
                     .ThenInclude(fv => fv.Voting)
+                .OrderByDescending(f => f.TimeCreated)
                 .Select(dbEntity => _mapper.MapFeature(dbEntity))
                 .AsNoTracking();
             return await features.ToListAsync();
         }
 
-        public async Task<IEnumerable<FeatureDalDto>> GetAllWithoutCollections(string? search)
+        public IEnumerable<FeatureDalDto> GetAllWithoutCollections(string? search)
         {
             var featuresQuery = RepoDbSet
                 .Include(f => f.Category)

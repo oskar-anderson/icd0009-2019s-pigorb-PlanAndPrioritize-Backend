@@ -23,6 +23,7 @@ namespace DAL.App.EF.Repositories
         {
             var categories = RepoDbSet
                 .Include(c => c.Features)
+                .OrderBy(c => c.Title)
                 //.AsSplitQuery()
                 .Select(dbEntity => _mapper.Map(dbEntity))
                 .AsNoTracking();
@@ -32,6 +33,7 @@ namespace DAL.App.EF.Repositories
         public async Task<IEnumerable<CategoryDalDto>> GetAllPlain()
         {
             var categories = RepoDbSet
+                .OrderBy(c => c.Title)
                 .Select(dbEntity => _mapper.Map(dbEntity))
                 .AsNoTracking();
             return await categories.ToListAsync();

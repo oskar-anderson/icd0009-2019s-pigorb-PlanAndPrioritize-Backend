@@ -30,6 +30,7 @@ namespace WebApp.ApiControllers._1._0
         public async Task<ActionResult<IEnumerable<AppUserApiDto>>> GetUsersForVoting(Guid id)
         {
             var users = (await _bll.AppUsers.GetUsersForVoting(id))
+                .OrderBy(u => u.LastName)
                 .Select(bllEntity => _mapper.Map(bllEntity));
             
             return Ok(users);
@@ -39,6 +40,7 @@ namespace WebApp.ApiControllers._1._0
         public async Task<ActionResult<IEnumerable<AppUserApiDto>>> GetUsersNotInVoting(Guid id)
         {
             var users = (await _bll.AppUsers.GetUsersNotInVoting(id))
+                .OrderBy(u => u.LastName)
                 .Select(bllEntity => _mapper.Map(bllEntity));
             
             return Ok(users);

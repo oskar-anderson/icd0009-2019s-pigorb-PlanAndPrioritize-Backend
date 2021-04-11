@@ -8,22 +8,20 @@ namespace BLL.App.DTO
     {
         public Guid Id { get; set; }
         
+        public int Size { get; set; }
+
         public int BusinessValue { get; set; }
         
         public int TimeCriticality { get; set; }
         
         public int RiskOrOpportunity { get; set; }
-        
-        public int Size { get; set; }
-        
+
         public decimal PriorityValue { get; set; }
         
-        public PriorityStatus PriorityStatus { get; set; }
+        public PriorityStatus PriorityStatus { get; set; } // Should be removed or is necessary?
 
         public Guid AppUserId { get; set; }
-        // public AppUserBllDto? AppUser { get; set; }
 
         public Guid FeatureInVotingId { get; set; }
-        // public FeatureInVotingBllDto? FeatureInVoting { get; set; }
     }
 }

@@ -16,8 +16,6 @@ namespace Contracts.DAL.App.Repositories
     {
         Task<IEnumerable<TDALEntity>> GetAll();
         Task<IEnumerable<TDALEntity>> GetAllPlain();
-        // Task<IEnumerable<TDALEntity>> GetAllWithFinishedTasks();
-        // Task<IEnumerable<TDALEntity>> GetAllInProgressTasks();
         Task<bool> Exists(Guid id);
         Task<TDALEntity> FirstOrDefault(Guid id);
         Task Delete(Guid id);

@@ -59,7 +59,5 @@ namespace DAL.App.EF
             UpdateTrackedEntities();
             return result;
         }
-        
-        
     }
 }
