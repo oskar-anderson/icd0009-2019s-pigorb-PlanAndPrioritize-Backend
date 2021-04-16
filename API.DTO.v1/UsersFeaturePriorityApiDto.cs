@@ -33,10 +33,12 @@ namespace API.DTO.v1
 
         public string PriorityStatus { get; set; } = default!;
 
-        public Guid AppUserId { get; set; }
+        //public Guid AppUserId { get; set; }
+
+        public string UserName { get; set; } = default!;
 
         // public Guid FeatureInVotingId { get; set; } necessary to pass?
-        
+
         // OR 
         // public Guid VotingId { get; set; }
         // and public Guid FeatureId { get; set; } ?

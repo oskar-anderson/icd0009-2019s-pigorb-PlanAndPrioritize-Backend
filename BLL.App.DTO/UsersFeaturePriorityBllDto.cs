@@ -22,6 +22,8 @@ namespace BLL.App.DTO
 
         public Guid AppUserId { get; set; }
 
+        public AppUserBllDto? AppUser { get; set; }
+
         public Guid FeatureInVotingId { get; set; }
     }
 }

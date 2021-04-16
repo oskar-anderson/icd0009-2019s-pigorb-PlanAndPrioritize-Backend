@@ -23,11 +23,13 @@ namespace WebApp.ApiControllers._1._0
     {
         private readonly IAppBLL _bll;
         private readonly DTOFeatureMapper _mapper;
+        private readonly DTOUsersFeaturePriorityMapper _pMapper;
 
         public FeaturesController(IAppBLL bll)
         {
             _bll = bll;
             _mapper = new DTOFeatureMapper();
+            _pMapper = new DTOUsersFeaturePriorityMapper();
         }
 
         [HttpGet("{search?}")]
@@ -73,6 +75,15 @@ namespace WebApp.ApiControllers._1._0
                 .Select(bllEntity => _mapper.MapFeature(bllEntity));
             
             return Ok(features);
+        }
+        
+        [HttpGet("{featureId}/{votingId}")]
+        public async Task<ActionResult<IEnumerable<UsersFeaturePriorityApiDto>>> GetUserPriorities(Guid featureId, Guid votingId)
+        {
+            var userPriorities = (await _bll.UsersFeaturePriorities.GetAllForFeatureAndVoting(featureId, votingId))
+                .Select(bllEntity => _pMapper.MapUserPriority(bllEntity));
+            
+            return Ok(userPriorities);
         }
         
         [HttpGet("{id}")]

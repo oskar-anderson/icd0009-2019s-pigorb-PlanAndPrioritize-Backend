@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using API.DTO.v1;
 using BLL.App.DTO;
 using BLL.App.DTO.Mappers;
@@ -40,13 +41,18 @@ namespace BLL.App.Services
                 ServiceRepository.Add(usersFeaturePriority);
             }
         }
-        
+
         private decimal CalculatePriorityUsingWSJF(int taskSize, int businessValue, int timeCriticality, int riskOrOpportunity)
         {
             var priceOfDelay = Convert.ToDecimal(businessValue) + Convert.ToDecimal(timeCriticality) +
                                Convert.ToDecimal(riskOrOpportunity);
             var WSJF = priceOfDelay / Convert.ToDecimal(taskSize);
             return decimal.Round(WSJF, 2);
+        }
+
+        public async Task<IEnumerable<UsersFeaturePriorityBllDto>> GetAllForFeatureAndVoting(Guid featureId, Guid votingId)
+        {
+            return (await ServiceRepository.GetAllForFeatureAndVoting(featureId, votingId)).Select(dalEntity => _mapper.Map(dalEntity));
         }
     }
 }
