@@ -38,12 +38,14 @@ namespace DAL.App.EF.Repositories
                 .AsNoTracking();
             return await features.ToListAsync();
         }
-
-        public IEnumerable<FeatureDalDto> GetAllWithoutCollections(string? search)
+        
+        public IEnumerable<FeatureDalDto> GetAllWithVotings(string? search)
         {
             var featuresQuery = RepoDbSet
                 .Include(f => f.Category)
                 .Include(f => f.AppUser)
+                .Include(f => f.FeatureInVotings)
+                    .ThenInclude(fv => fv.Voting)
                 .Select(dbEntity => _mapper.MapFeature(dbEntity))
                 .AsNoTracking()
                 .AsQueryable();
@@ -56,6 +58,24 @@ namespace DAL.App.EF.Repositories
             
             return newQuery;
         }
+
+        // public IEnumerable<FeatureDalDto> GetAllWithoutCollections(string? search) // Replaced with GetAllWithVotings?
+        // {
+        //     var featuresQuery = RepoDbSet
+        //         .Include(f => f.Category)
+        //         .Include(f => f.AppUser)
+        //         .Select(dbEntity => _mapper.MapFeature(dbEntity))
+        //         .AsNoTracking()
+        //         .AsQueryable();
+        //     
+        //     var newQuery = featuresQuery
+        //         .AsEnumerable()
+        //         .Where(f => ContainsSearch(f, search));
+        //     
+        //     newQuery = newQuery.OrderByDescending(f => f.TimeCreated);
+        //     
+        //     return newQuery;
+        // }
 
         private bool ContainsSearch(FeatureDalDto feature, string? search)
         {

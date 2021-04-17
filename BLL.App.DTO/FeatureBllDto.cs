@@ -28,5 +28,6 @@ namespace BLL.App.DTO
         public string? ChangeLog { get; set; }
         public ICollection<CommentBllDto>? Comments { get; set; }
         public ICollection<FeatureInVotingBllDto>? FeatureInVotings { get; set; }
+        public bool IsInOpenVoting { get; set; }
     }
 }

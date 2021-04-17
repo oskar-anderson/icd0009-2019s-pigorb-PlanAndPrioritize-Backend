@@ -55,7 +55,8 @@ namespace API.DTO.v1.Mappers
                 LastEdited = feature.LastEdited,
                 ChangeLog = feature.ChangeLog ?? "",
                 CommentIds = GetCommentIds(feature.Comments),
-                VotingIds = GetVotingIds(feature.FeatureInVotings)
+                VotingIds = GetVotingIds(feature.FeatureInVotings),
+                IsInOpenVoting = feature.IsInOpenVoting
             };
         }
 

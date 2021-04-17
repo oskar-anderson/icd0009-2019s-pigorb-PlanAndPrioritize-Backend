@@ -42,5 +42,7 @@ namespace API.DTO.v1
         public string? ChangeLog { get; set; }
         public ICollection<Guid>? CommentIds { get; set; }
         public ICollection<Guid>? VotingIds { get; set; }
+
+        public bool IsInOpenVoting { get; set; }
     }
 }

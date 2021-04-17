@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using API.DTO.v1;
@@ -33,9 +32,12 @@ namespace WebApp.ApiControllers._1._0
         }
 
         [HttpGet("{search?}")]
-        public ActionResult<IEnumerable<FeatureApiDto>> GetFeaturesForList(string? search)
+        public async Task<ActionResult<IEnumerable<FeatureApiDto>>> GetFeaturesForList(string? search)
         {
-            var features = _bll.Features.GetAllWithoutCollections(search)
+            await _bll.Features.UpdatePriorityForAllFeatures(); // Limit to some amount of features?
+            await _bll.SaveChangesAsync();
+            
+            var features = _bll.Features.GetAllWithVotings(search)
                 .Select(bllEntity => _mapper.MapFeature(bllEntity));
             
             return Ok(features);
@@ -89,6 +91,9 @@ namespace WebApp.ApiControllers._1._0
         [HttpGet("{id}")]
         public async Task<ActionResult<FeatureApiDto>> GetFeature(Guid id)
         {
+            await _bll.Features.UpdatePriorityForFeature(id);
+            await _bll.SaveChangesAsync();
+            
             var featureDto = _mapper.MapFeature(await _bll.Features.FirstOrDefault(id));
 
             if (featureDto == null)
