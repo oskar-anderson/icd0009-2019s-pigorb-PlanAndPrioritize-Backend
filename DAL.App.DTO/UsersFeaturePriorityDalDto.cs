@@ -24,5 +24,6 @@ namespace DAL.App.DTO
 
         public AppUserDalDto? AppUser { get; set; }
         public Guid FeatureInVotingId { get; set; }
+        public FeatureInVotingDalDto? FeatureInVoting { get; set; }
     }
 }

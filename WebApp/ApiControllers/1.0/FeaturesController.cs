@@ -79,6 +79,17 @@ namespace WebApp.ApiControllers._1._0
             return Ok(features);
         }
         
+        [HttpGet("{votingId}")]
+        public async Task<ActionResult<IEnumerable<FeatureWithUsersPriorityApiDto>>> GetFeaturesWithUsersPriorities(Guid votingId)
+        {
+            var userPriorities = 
+                await _bll.UsersFeaturePriorities.GetPrioritiesForVotingAndUser(votingId, User.UserId());
+            var features = (await _bll.Features.GetFeaturesWithUsersPriorities(userPriorities, votingId))
+                .Select(bllEntity => _mapper.MapFeatureWithPriority(bllEntity));
+
+            return Ok(features);
+        }
+        
         [HttpGet("{featureId}/{votingId}")]
         public async Task<ActionResult<IEnumerable<UsersFeaturePriorityApiDto>>> GetUserPriorities(Guid featureId, Guid votingId)
         {

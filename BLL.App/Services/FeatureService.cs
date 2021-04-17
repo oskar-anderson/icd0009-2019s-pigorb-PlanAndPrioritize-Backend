@@ -141,6 +141,42 @@ namespace BLL.App.Services
             await CalculateSizeAndPriority(new List<Guid>{ id });
         }
 
+        public async Task<IEnumerable<FeatureWithUsersPriorityBllDto>> GetFeaturesWithUsersPriorities(
+            IEnumerable<UsersFeaturePriorityBllDto> userPriorities, Guid votingId)
+        {
+            var userPrioritiesList = userPriorities.ToList();
+            var votedFeaturesWithPriorities = userPrioritiesList.Select(priority => new FeatureWithUsersPriorityBllDto
+                {
+                    Id = priority.FeatureInVoting!.FeatureId,
+                    VotingId = priority.FeatureInVoting.VotingId,
+                    Title = priority.FeatureInVoting.Feature!.Title,
+                    Description = priority.FeatureInVoting.Feature.Description,
+                    CategoryName = priority.FeatureInVoting.Feature.Category!.Title,
+                    TaskSize = priority.Size,
+                    BusinessValue = priority.BusinessValue,
+                    TimeCriticality = priority.TimeCriticality,
+                    RiskOrOpportunity = priority.RiskOrOpportunity
+                })
+                .ToList();
+
+            var votedFeaturesIds = userPrioritiesList.Select(u => u.FeatureInVoting!.FeatureId);
+            var allFeaturesForVoting = await GetFeaturesForVoting(votingId);
+            var featuresNotVoted = allFeaturesForVoting.Where(f => !votedFeaturesIds.Contains(f.Id));
+            
+            var featuresWithoutPriorities = featuresNotVoted.Select(feature => new FeatureWithUsersPriorityBllDto
+                {
+                    Id = feature.Id,
+                    VotingId = votingId,
+                    Title = feature.Title,
+                    Description = feature.Description,
+                    CategoryName = feature.Category!.Title
+                })
+                .ToList();
+            
+            votedFeaturesWithPriorities.AddRange(featuresWithoutPriorities);
+            return votedFeaturesWithPriorities;
+        }
+
         private FeatureInVotingDalDto? GetLatestFeatureInVoting(ICollection<FeatureInVotingDalDto> featureInVotings)
         {
             return featureInVotings.OrderByDescending(f => f.Voting!.EndTime).FirstOrDefault();

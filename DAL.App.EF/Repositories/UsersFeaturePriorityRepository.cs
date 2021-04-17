@@ -31,5 +31,41 @@ namespace DAL.App.EF.Repositories
                 .AsNoTracking();
             return await priorities.ToListAsync();
         }
-      }
+
+        public async Task<IEnumerable<UsersFeaturePriorityDalDto>> GetPrioritiesForVotingAndUser(Guid votingId, Guid userId)
+        {
+            var priorities = RepoDbSet
+                .Include(u => u.AppUser)
+                .Include(u => u.FeatureInVoting)
+                    .ThenInclude(f => f!.Feature)
+                        .ThenInclude(f => f!.Category)
+                .Where(u => u.FeatureInVoting != null && 
+                            u.FeatureInVoting.VotingId == votingId && 
+                            u.AppUserId == userId)
+                .OrderBy(u => u.AppUser!.LastName)
+                .Select(dbEntity => _mapper.MapUserPriorityWithSubData(dbEntity))
+                .AsNoTracking();
+            return await priorities.ToListAsync();
+        }
+        
+        public async Task<bool> ExistsPrioritiesForVotingAndUser(Guid votingId, Guid userId)
+        {
+            var priorities = RepoDbSet
+                .Include(u => u.FeatureInVoting)
+                .Where(u => u.FeatureInVoting != null && 
+                            u.FeatureInVoting.VotingId == votingId && 
+                            u.AppUserId == userId)
+                .AsNoTracking()
+                .ToListAsync();
+            return (await priorities).Count > 0;
+        }
+
+        public async Task<UsersFeaturePriorityDalDto> FirstOrDefaultForUserAndFeatureInVoting(Guid userId, Guid featureInVotingId)
+        {
+            var query = RepoDbSet
+                .Where(u => u.AppUserId == userId && u.FeatureInVotingId == featureInVotingId)
+                .AsQueryable();
+            return _mapper.Map(await query.AsNoTracking().FirstOrDefaultAsync());
+        }
+    }
 }

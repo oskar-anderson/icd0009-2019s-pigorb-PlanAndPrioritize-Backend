@@ -103,6 +103,13 @@ namespace WebApp.ApiControllers._1._0
             return Ok(votingDto);
         }
         
+        [HttpGet("{votingId}")]
+        public async Task<ActionResult<VotingApiDto>> HasVoted(Guid votingId)
+        {
+            var hasVoted = await _bll.UsersFeaturePriorities.ExistsPrioritiesForVotingAndUser(votingId, User.UserId());
+            return Ok(hasVoted);
+        }
+        
         [HttpPut("{id}")]
         public async Task<IActionResult> EditVoting(Guid id, VotingEditApiDto votingDto)
         {
@@ -234,10 +241,30 @@ namespace WebApp.ApiControllers._1._0
 
             await _bll.FeatureInVotings.CalculatePriorityValuesForVoting(dtoList.First().VotingId);
             await _bll.SaveChangesAsync();
+            
+            ICollection<Guid> featureIds = dtoList.Select(dto => dto.Id).ToList();
+            await _bll.Features.CalculateSizeAndPriority(featureIds);
+            await _bll.SaveChangesAsync();
 
-            // Values should be calculated only when voting is over?
-            // Or filtering of showing them or not is done on display side?
-            // If is in open votings then don't display size and priority value!!!
+            return Ok();
+        }
+        
+        [HttpPost]
+        public async Task<ActionResult> EditVotes(IEnumerable<UsersFeaturePriorityCreateApiDto> dtos)
+        {
+            var dtoList = dtos.ToList();
+            if (dtoList.Count == 0)
+            {
+                return Ok();
+            }
+
+            Dictionary<Guid, UsersFeaturePriorityCreateApiDto> withFeatureInVotingId = await _bll.FeatureInVotings.GetFeatureInVotingIds(dtoList);
+            _bll.UsersFeaturePriorities.UpdateUserPriorities(withFeatureInVotingId, User.UserId());
+            await _bll.SaveChangesAsync();
+
+            await _bll.FeatureInVotings.CalculatePriorityValuesForVoting(dtoList.First().VotingId);
+            await _bll.SaveChangesAsync();
+            
             ICollection<Guid> featureIds = dtoList.Select(dto => dto.Id).ToList();
             await _bll.Features.CalculateSizeAndPriority(featureIds);
             await _bll.SaveChangesAsync();

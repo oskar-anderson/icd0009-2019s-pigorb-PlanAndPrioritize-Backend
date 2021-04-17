@@ -45,4 +45,25 @@ namespace API.DTO.v1
 
         public bool IsInOpenVoting { get; set; }
     }
+    
+    public class FeatureWithUsersPriorityApiDto
+    {
+        public Guid Id { get; set; }
+        
+        public Guid VotingId { get; set; } = default!;
+
+        public string Title { get; set; } = default!;
+
+        public string? Description { get; set; }
+        
+        public string CategoryName { get; set; } = default!;
+
+        public int TaskSize { get; set; }
+        
+        public int BusinessValue { get; set; }
+        
+        public int TimeCriticality { get; set; }
+        
+        public int RiskOrOpportunity { get; set; }
+    }
 }

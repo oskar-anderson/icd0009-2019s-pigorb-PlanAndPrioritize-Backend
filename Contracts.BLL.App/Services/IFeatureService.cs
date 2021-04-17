@@ -23,5 +23,7 @@ namespace Contracts.BLL.App.Services
         
         Task UpdatePriorityForAllFeatures();
         Task UpdatePriorityForFeature(Guid id);
+        Task<IEnumerable<FeatureWithUsersPriorityBllDto>> GetFeaturesWithUsersPriorities(
+            IEnumerable<UsersFeaturePriorityBllDto> userPriorities, Guid votingId);
     }
 }

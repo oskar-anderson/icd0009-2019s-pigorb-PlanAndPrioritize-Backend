@@ -26,7 +26,8 @@ namespace BLL.App.Services
 
         public void AddUserPriorities(Dictionary<Guid, UsersFeaturePriorityCreateApiDto> featureInVotings, Guid userId)
         {
-            foreach (var usersFeaturePriority in featureInVotings.Select(entry => new UsersFeaturePriorityDalDto
+            foreach (var usersFeaturePriority in featureInVotings
+                .Select(entry => new UsersFeaturePriorityDalDto
             {
                 Size = entry.Value.TaskSize,
                 BusinessValue = entry.Value.BusinessValue,
@@ -42,6 +43,34 @@ namespace BLL.App.Services
             }
         }
 
+        public async void UpdateUserPriorities(Dictionary<Guid, UsersFeaturePriorityCreateApiDto> featureInVotings, Guid userId)
+        {
+            foreach (var entry in featureInVotings)
+            {
+                var usersFeaturePriority = new UsersFeaturePriorityDalDto
+                {
+                    Size = entry.Value.TaskSize,
+                    BusinessValue = entry.Value.BusinessValue,
+                    TimeCriticality = entry.Value.TimeCriticality,
+                    RiskOrOpportunity = entry.Value.RiskOrOpportunity,
+                    PriorityValue = CalculatePriorityUsingWSJF(entry.Value.TaskSize, entry.Value.BusinessValue,
+                        entry.Value.TimeCriticality, entry.Value.RiskOrOpportunity),
+                    AppUserId = userId,
+                    FeatureInVotingId = entry.Key
+                };
+                var existingPriority = await FirstOrDefaultForUserAndFeatureInVoting(userId, entry.Key);
+                if (existingPriority == null)
+                {
+                    ServiceRepository.Add(usersFeaturePriority);
+                }
+                else
+                {
+                    usersFeaturePriority.Id = existingPriority.Id;
+                    ServiceRepository.Update(usersFeaturePriority);
+                }
+            }
+        }
+
         private decimal CalculatePriorityUsingWSJF(int taskSize, int businessValue, int timeCriticality, int riskOrOpportunity)
         {
             var priceOfDelay = Convert.ToDecimal(businessValue) + Convert.ToDecimal(timeCriticality) +
@@ -52,7 +81,24 @@ namespace BLL.App.Services
 
         public async Task<IEnumerable<UsersFeaturePriorityBllDto>> GetAllForFeatureAndVoting(Guid featureId, Guid votingId)
         {
-            return (await ServiceRepository.GetAllForFeatureAndVoting(featureId, votingId)).Select(dalEntity => _mapper.Map(dalEntity));
+            return (await ServiceRepository.GetAllForFeatureAndVoting(featureId, votingId))
+                .Select(dalEntity => _mapper.Map(dalEntity));
+        }
+
+        public async Task<IEnumerable<UsersFeaturePriorityBllDto>> GetPrioritiesForVotingAndUser(Guid votingId, Guid userId)
+        {
+            return (await ServiceRepository.GetPrioritiesForVotingAndUser(votingId, userId))
+                .Select(dalEntity => _mapper.Map(dalEntity));
+        }
+
+        public async Task<bool> ExistsPrioritiesForVotingAndUser(Guid votingId, Guid userId)
+        {
+            return await ServiceRepository.ExistsPrioritiesForVotingAndUser(votingId, userId);
+        }
+
+        public async Task<UsersFeaturePriorityBllDto> FirstOrDefaultForUserAndFeatureInVoting(Guid userId, Guid featureInVotingId)
+        {
+            return _mapper.Map(await ServiceRepository.FirstOrDefaultForUserAndFeatureInVoting(userId, featureInVotingId));
         }
     }
 }

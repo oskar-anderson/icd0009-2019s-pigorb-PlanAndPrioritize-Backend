@@ -83,5 +83,10 @@ namespace API.DTO.v1.Mappers
                 _ => "Incorrect feature status value"
             };
         }
+
+        public FeatureWithUsersPriorityApiDto MapFeatureWithPriority(FeatureWithUsersPriorityBllDto bllEntity)
+        {
+            return Mapper.Map<FeatureWithUsersPriorityBllDto, FeatureWithUsersPriorityApiDto>(bllEntity);
+        }
     }
 }

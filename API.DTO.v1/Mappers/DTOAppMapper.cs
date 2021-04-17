@@ -20,6 +20,7 @@ namespace API.DTO.v1.Mappers
             MapperConfigurationExpression.CreateMap<UsersFeaturePriorityBllDto, UsersFeaturePriorityApiDto>();
             MapperConfigurationExpression.CreateMap<VotingBllDto, VotingApiDto>();
             MapperConfigurationExpression.CreateMap<VotingEditBllDto, VotingEditApiDto>();
+            MapperConfigurationExpression.CreateMap<FeatureWithUsersPriorityBllDto, FeatureWithUsersPriorityApiDto>();
             MapperConfigurationExpression.CreateMap<VotingEditApiDto, VotingBllDto>();
             
             MapperConfigurationExpression.CreateMap<AppUserApiDto, AppUserBllDto>();

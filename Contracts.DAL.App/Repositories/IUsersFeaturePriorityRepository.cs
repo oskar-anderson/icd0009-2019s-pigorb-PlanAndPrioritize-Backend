@@ -15,5 +15,9 @@ namespace Contracts.DAL.App.Repositories
         where TDALEntity : class, IDomainBaseEntity<Guid>, new()
     {
         Task<IEnumerable<TDALEntity>> GetAllForFeatureAndVoting(Guid featureId, Guid votingId);
+        Task<IEnumerable<TDALEntity>> GetPrioritiesForVotingAndUser(Guid votingId, Guid userId);
+        Task<bool> ExistsPrioritiesForVotingAndUser(Guid votingId, Guid userId);
+        
+        Task<TDALEntity> FirstOrDefaultForUserAndFeatureInVoting(Guid userId, Guid featureInVotingId);
     }
 }

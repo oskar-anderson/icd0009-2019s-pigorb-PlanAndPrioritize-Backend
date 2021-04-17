@@ -45,7 +45,7 @@ namespace DAL.App.DTO.Mappers
                         TimeCreated = u.Feature!.TimeCreated,
                         CreatedById = u.Feature!.CreatedById,
                         LastEdited = u.Feature!.LastEdited,
-                        ChangeLog = u.Feature!.ChangeLog,
+                        ChangeLog = u.Feature!.ChangeLog
                     }
                 }).ToList(),
             };
