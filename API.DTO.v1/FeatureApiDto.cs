@@ -66,4 +66,17 @@ namespace API.DTO.v1
         
         public int RiskOrOpportunity { get; set; }
     }
+    
+    public class FeatureForGraphApiDto
+    {
+        public Guid Id { get; set; }
+
+        public string Title { get; set; } = default!;
+
+        public string CategoryName { get; set; } = default!;
+
+        public string FeatureStatus { get; set; } = default!;
+
+        public ICollection<TimeBarApiDto>? Bars { get; set; }
+    }
 }

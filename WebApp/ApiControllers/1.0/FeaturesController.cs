@@ -44,6 +44,15 @@ namespace WebApp.ApiControllers._1._0
         }
         
         [HttpGet]
+        public async Task<ActionResult<IEnumerable<FeatureForGraphApiDto>>> GetFeaturesForGraph()
+        {
+            var features = (await _bll.Features.GetFeaturesForGraph())
+                .Select(bllEntity => _mapper.MapFeatureForGraph(bllEntity));
+            
+            return Ok(features);
+        }
+        
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<FeatureApiDto>>> GetToDoFeatures()
         {
             var features = (await _bll.Features.GetToDoFeatures())

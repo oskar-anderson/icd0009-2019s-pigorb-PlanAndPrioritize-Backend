@@ -46,6 +46,11 @@ namespace BLL.App.Services
             return features;
         }
 
+        public async Task<IEnumerable<FeatureBllDto>> GetFeaturesForGraph()
+        {
+            return (await ServiceRepository.GetFeaturesForGraph()).Select(dalEntity => _mapper.Map(dalEntity));
+        }
+
         public async Task<IEnumerable<FeatureBllDto>> GetToDoFeatures()
         {
             return (await ServiceRepository.GetToDoFeatures()).Select(dalEntity => _mapper.Map(dalEntity));
@@ -190,19 +195,11 @@ namespace BLL.App.Services
         private int GetSize(FeatureInVotingDalDto? latestFeatureInVoting)
         {
             return latestFeatureInVoting != null ? decimal.ToInt32(latestFeatureInVoting.AverageSize) : 0;
-            
-            // Don't calculate average, take latest!
-            // var sum = featureInVotings.Sum(fv => fv.AverageSize);
-            // return decimal.ToInt32(sum / featureInVotings.Count);
         }
         
         private decimal GetPriority(FeatureInVotingDalDto? latestFeatureInVoting)
         {
             return latestFeatureInVoting?.AveragePriorityValue ?? 0;
-            
-            // Don't calculate average, take latest!
-            // var sum = featureInVotings.Sum(fv => fv.AveragePriorityValue);
-            // return decimal.Round(sum / featureInVotings.Count, 2);
         }
 
         private bool IsInVoting(FeatureBllDto feature, Guid votingId)
@@ -298,7 +295,7 @@ namespace BLL.App.Services
                                            apiFeature.FeatureStatus + "'.";
                 editedFeature.FeatureStatus = MapToFeatureStatus(apiFeature.FeatureStatus);
             }
-            
+
             if (bllFeature.StartTime != apiFeature.StartTime)
             {
                 editedFeature.ChangeLog += "\\n" + DateTime.Now.ToString("dd.MM.yyyy HH:mm") + " " + userName + " changed start date from '" + 

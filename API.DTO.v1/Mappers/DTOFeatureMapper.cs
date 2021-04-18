@@ -88,5 +88,23 @@ namespace API.DTO.v1.Mappers
         {
             return Mapper.Map<FeatureWithUsersPriorityBllDto, FeatureWithUsersPriorityApiDto>(bllEntity);
         }
+
+        public FeatureForGraphApiDto MapFeatureForGraph(FeatureBllDto bllEntity)
+        {
+            var timeBar = new TimeBarApiDto
+            {
+                StartDate = bllEntity.StartTime,
+                EndDate = bllEntity.EndTime,
+                Label = bllEntity.Title
+            };
+            return new FeatureForGraphApiDto
+            {
+                Id = bllEntity.Id,
+                Title = bllEntity.Title,
+                CategoryName = bllEntity.Category!.Title,
+                FeatureStatus = MapFeatureStatus(bllEntity.FeatureStatus),
+                Bars = new List<TimeBarApiDto> { timeBar }
+            };
+        }
     }
 }
