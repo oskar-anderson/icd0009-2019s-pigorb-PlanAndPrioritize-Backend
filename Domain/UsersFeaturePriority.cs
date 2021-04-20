@@ -23,7 +23,5 @@ namespace Domain
 
         public Guid FeatureInVotingId { get; set; }
         public FeatureInVoting? FeatureInVoting { get; set; }
-
-        public PriorityStatus PriorityStatus { get; set; }
     }
 }

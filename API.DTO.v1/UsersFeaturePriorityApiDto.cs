@@ -30,17 +30,7 @@ namespace API.DTO.v1
         public int RiskOrOpportunity { get; set; }
 
         public decimal PriorityValue { get; set; }
-
-        public string PriorityStatus { get; set; } = default!;
-
-        //public Guid AppUserId { get; set; }
-
+        
         public string UserName { get; set; } = default!;
-
-        // public Guid FeatureInVotingId { get; set; } necessary to pass?
-
-        // OR 
-        // public Guid VotingId { get; set; }
-        // and public Guid FeatureId { get; set; } ?
     }
 }

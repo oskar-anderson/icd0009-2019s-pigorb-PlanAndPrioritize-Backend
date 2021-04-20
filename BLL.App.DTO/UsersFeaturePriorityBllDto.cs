@@ -1,5 +1,4 @@
 using System;
-using Classifiers;
 using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
 
 namespace BLL.App.DTO
@@ -17,9 +16,7 @@ namespace BLL.App.DTO
         public int RiskOrOpportunity { get; set; }
 
         public decimal PriorityValue { get; set; }
-
-        public PriorityStatus PriorityStatus { get; set; } // Should be removed or is necessary?
-
+        
         public Guid AppUserId { get; set; }
 
         public AppUserBllDto? AppUser { get; set; }
@@ -32,7 +29,7 @@ namespace BLL.App.DTO
         {
             return Id.Equals(other.Id) && Size == other.Size && BusinessValue == other.BusinessValue &&
                    TimeCriticality == other.TimeCriticality && RiskOrOpportunity == other.RiskOrOpportunity &&
-                   PriorityValue == other.PriorityValue && PriorityStatus == other.PriorityStatus &&
+                   PriorityValue == other.PriorityValue &&
                    AppUserId.Equals(other.AppUserId) && Equals(AppUser, other.AppUser) &&
                    FeatureInVotingId.Equals(other.FeatureInVotingId) && Equals(FeatureInVoting, other.FeatureInVoting);
         }
@@ -54,7 +51,6 @@ namespace BLL.App.DTO
             hashCode.Add(TimeCriticality);
             hashCode.Add(RiskOrOpportunity);
             hashCode.Add(PriorityValue);
-            hashCode.Add((int) PriorityStatus);
             hashCode.Add(AppUserId);
             hashCode.Add(AppUser);
             hashCode.Add(FeatureInVotingId);

@@ -15,18 +15,7 @@ namespace API.DTO.v1.Mappers
                 TimeCriticality = bllDto.TimeCriticality,
                 RiskOrOpportunity = bllDto.RiskOrOpportunity,
                 PriorityValue = bllDto.PriorityValue,
-                PriorityStatus = FormatStatus(bllDto.PriorityStatus),
                 UserName = bllDto.AppUser?.FirstName + ' ' + bllDto.AppUser?.LastName
-            };
-        }
-        
-        private string FormatStatus(PriorityStatus status)
-        {
-            return status switch
-            {
-                PriorityStatus.Estimated => "Estimated",
-                PriorityStatus.NotEstimated => "Not estimated",
-                _ => ""
             };
         }
     }

@@ -17,9 +17,6 @@ namespace DAL.App.DTO
         public int RiskOrOpportunity { get; set; }
 
         public decimal PriorityValue { get; set; }
-        
-        public PriorityStatus PriorityStatus { get; set; } // Should be removed or is necessary?
-
         public Guid AppUserId { get; set; }
 
         public AppUserDalDto? AppUser { get; set; }

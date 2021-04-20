@@ -14,7 +14,6 @@ namespace DAL.App.DTO.Mappers
                 BusinessValue = domainEntity.BusinessValue,
                 TimeCriticality = domainEntity.TimeCriticality,
                 RiskOrOpportunity = domainEntity.RiskOrOpportunity,
-                PriorityStatus = domainEntity.PriorityStatus,
                 AppUserId = domainEntity.AppUserId,
                 AppUser = CreateAppUserDalDto(domainEntity.AppUser),
                 FeatureInVotingId = domainEntity.FeatureInVotingId,
@@ -86,7 +85,6 @@ namespace DAL.App.DTO.Mappers
                 BusinessValue = domainEntity.BusinessValue,
                 TimeCriticality = domainEntity.TimeCriticality,
                 RiskOrOpportunity = domainEntity.RiskOrOpportunity,
-                PriorityStatus = domainEntity.PriorityStatus,
                 AppUserId = domainEntity.AppUserId,
                 AppUser = CreateAppUserDalDto(domainEntity.AppUser),
                 FeatureInVotingId = domainEntity.FeatureInVotingId
