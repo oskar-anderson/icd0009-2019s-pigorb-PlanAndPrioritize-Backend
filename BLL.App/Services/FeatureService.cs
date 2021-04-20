@@ -182,31 +182,6 @@ namespace BLL.App.Services
             return votedFeaturesWithPriorities;
         }
 
-        private FeatureInVotingDalDto? GetLatestFeatureInVoting(ICollection<FeatureInVotingDalDto> featureInVotings)
-        {
-            return featureInVotings.OrderByDescending(f => f.Voting!.EndTime).FirstOrDefault();
-        }
-        
-        private FeatureInVotingBllDto? GetLatestFeatureInVoting(ICollection<FeatureInVotingBllDto> featureInVotings)
-        {
-            return featureInVotings.OrderByDescending(f => f.Voting!.EndTime).FirstOrDefault();
-        }
-
-        private int GetSize(FeatureInVotingDalDto? latestFeatureInVoting)
-        {
-            return latestFeatureInVoting != null ? decimal.ToInt32(latestFeatureInVoting.AverageSize) : 0;
-        }
-        
-        private decimal GetPriority(FeatureInVotingDalDto? latestFeatureInVoting)
-        {
-            return latestFeatureInVoting?.AveragePriorityValue ?? 0;
-        }
-
-        private bool IsInVoting(FeatureBllDto feature, Guid votingId)
-        {
-            return feature.FeatureInVotings != null && feature.FeatureInVotings.ToList().Any(f => f.VotingId == votingId);
-        }
-
         public FeatureBllDto AddWithMetaData(FeatureBllDto entity, Guid userId)
         {
             entity.CreatedById = userId;
@@ -325,6 +300,31 @@ namespace BLL.App.Services
             }
 
             return editedFeature;
+        }
+        
+        private FeatureInVotingDalDto? GetLatestFeatureInVoting(ICollection<FeatureInVotingDalDto> featureInVotings)
+        {
+            return featureInVotings.OrderByDescending(f => f.Voting!.EndTime).FirstOrDefault();
+        }
+        
+        private FeatureInVotingBllDto? GetLatestFeatureInVoting(ICollection<FeatureInVotingBllDto> featureInVotings)
+        {
+            return featureInVotings.OrderByDescending(f => f.Voting!.EndTime).FirstOrDefault();
+        }
+
+        private int GetSize(FeatureInVotingDalDto? latestFeatureInVoting)
+        {
+            return latestFeatureInVoting != null ? decimal.ToInt32(latestFeatureInVoting.AverageSize) : 0;
+        }
+        
+        private decimal GetPriority(FeatureInVotingDalDto? latestFeatureInVoting)
+        {
+            return latestFeatureInVoting?.AveragePriorityValue ?? 0;
+        }
+
+        private bool IsInVoting(FeatureBllDto feature, Guid votingId)
+        {
+            return feature.FeatureInVotings != null && feature.FeatureInVotings.ToList().Any(f => f.VotingId == votingId);
         }
 
         private string MapFromFeatureStatus(FeatureStatus status)

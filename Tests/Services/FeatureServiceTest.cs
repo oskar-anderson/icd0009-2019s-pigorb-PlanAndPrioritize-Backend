@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.DTO.v1;
 using BLL.App.DTO;
 using BLL.App.DTO.Mappers;
 using BLL.App.Services;
+using Classifiers;
 using Contracts.DAL.App;
 using Contracts.DAL.App.Repositories;
 using DAL.App.DTO;
@@ -17,15 +19,15 @@ namespace Tests.Services
     {
         private readonly Mock<IFeatureRepository> _repositoryMock;
         private readonly FeatureService _featureService;
-        private readonly BLLFeatureMapper _mapper = new ();
-        
+        private readonly BLLFeatureMapper _mapper = new();
+
         public FeatureServiceTest()
         {
             var uowMock = new Mock<IAppUnitOfWork>();
             var uow = uowMock.Object;
             _repositoryMock = new Mock<IFeatureRepository>();
             var repository = _repositoryMock.Object;
-            
+
             uowMock.Setup(u => u.Features).Returns(repository);
             _featureService = new FeatureService(uow);
         }
@@ -36,50 +38,57 @@ namespace Tests.Services
             var featureId = new Guid("00000000-0000-0000-0000-000000000001");
             var votingId = new Guid("00000000-0000-0000-0000-000000000002");
             var featureDalDto =
-                GetDalFeatureWithVotingStartAndEndTime(featureId, votingId, DateTime.Parse("April 1, 2021"), DateTime.MaxValue);
+                FeatureServiceTestUtils.GetDalFeatureWithVotingStartAndEndTime(featureId, votingId,
+                    DateTime.Parse("April 1, 2021"),
+                    DateTime.MaxValue);
             _repositoryMock.Setup(repo => repo.FirstOrDefault(featureId)).Returns(Task.FromResult(featureDalDto));
 
             var featureBllDto = _featureService.FirstOrDefault(featureId);
             Assert.True(featureBllDto.Result.IsInOpenVoting, "Should be in open voting");
         }
-        
+
         [Fact]
         public void TestVotingIsClosedIsInOpenVotingIsFalse()
         {
             var featureId = new Guid("00000000-0000-0000-0000-000000000001");
             var votingId = new Guid("00000000-0000-0000-0000-000000000002");
             var featureDalDto =
-                GetDalFeatureWithVotingStartAndEndTime(featureId, votingId, DateTime.Parse("April 1, 2021"), DateTime.Parse("April 10, 2021"));
+                FeatureServiceTestUtils.GetDalFeatureWithVotingStartAndEndTime(featureId, votingId,
+                    DateTime.Parse("April 1, 2021"),
+                    DateTime.Parse("April 10, 2021"));
             _repositoryMock.Setup(repo => repo.FirstOrDefault(featureId)).Returns(Task.FromResult(featureDalDto));
 
             var featureBllDto = _featureService.FirstOrDefault(featureId);
             Assert.False(featureBllDto.Result.IsInOpenVoting, "Should not be in open voting");
         }
-        
+
         [Fact]
         public void TestVotingIsNotYetOpenIsInOpenVotingIsTrue()
         {
             var featureId = new Guid("00000000-0000-0000-0000-000000000001");
             var votingId = new Guid("00000000-0000-0000-0000-000000000002");
             var featureDalDto =
-                GetDalFeatureWithVotingStartAndEndTime(featureId, votingId, DateTime.MaxValue, DateTime.MaxValue);
+                FeatureServiceTestUtils.GetDalFeatureWithVotingStartAndEndTime(featureId, votingId, DateTime.MaxValue,
+                    DateTime.MaxValue);
             _repositoryMock.Setup(repo => repo.FirstOrDefault(featureId)).Returns(Task.FromResult(featureDalDto));
 
             var featureBllDto = _featureService.FirstOrDefault(featureId);
-            Assert.True(featureBllDto.Result.IsInOpenVoting, "If voting is assigned but not yet started then this parameter should be true");
+            Assert.True(featureBllDto.Result.IsInOpenVoting,
+                "If voting is assigned but not yet started then this parameter should be true");
         }
 
         [Fact]
         public void TestIsInManyVotingsLatestIsOpenIsInOpenVotingIsTrue()
         {
             var featureId = new Guid("00000000-0000-0000-0000-000000000001");
-            var featureDalDto = GetDalFeatureWithManyFeatureInVotings(featureId);
+            var featureDalDto = FeatureServiceTestUtils.GetDalFeatureWithManyFeatureInVotings(featureId);
             _repositoryMock.Setup(repo => repo.FirstOrDefault(featureId)).Returns(Task.FromResult(featureDalDto));
-            
+
             var featureBllDto = _featureService.FirstOrDefault(featureId);
-            Assert.True(featureBllDto.Result.IsInOpenVoting, "Should be in open voting because is based on latest voting end date");
+            Assert.True(featureBllDto.Result.IsInOpenVoting,
+                "Should be in open voting because is based on latest voting end date");
         }
-        
+
         [Fact]
         public void TestGetFeaturesForVotingReturnsTwoOfThreeFeatures()
         {
@@ -88,117 +97,116 @@ namespace Tests.Services
             var featureId3 = new Guid("00000000-0000-0000-0000-000000000003");
             var votingId1 = new Guid("00000000-0000-0000-0000-000000000004");
             var votingId2 = new Guid("00000000-0000-0000-0000-000000000005");
-            
+
             IEnumerable<FeatureDalDto> features = new List<FeatureDalDto>
             {
-                GetDalFeatureWithVotingId(featureId1, votingId1),
-                GetDalFeatureWithVotingId(featureId2, votingId1),
-                GetDalFeatureWithVotingId(featureId3, votingId2)
+                FeatureServiceTestUtils.GetDalFeatureWithVotingId(featureId1, votingId1, FeatureStatus.NotStarted),
+                FeatureServiceTestUtils.GetDalFeatureWithVotingId(featureId2, votingId1, FeatureStatus.NotStarted),
+                FeatureServiceTestUtils.GetDalFeatureWithVotingId(featureId3, votingId2, FeatureStatus.NotStarted)
             };
             _repositoryMock.Setup(repo => repo.GetAll()).Returns(Task.FromResult(features));
             var expectedFeatureBllDtos = new List<FeatureBllDto>
             {
-                _mapper.MapFeature(GetDalFeatureWithVotingId(featureId1, votingId1)),
-                _mapper.MapFeature(GetDalFeatureWithVotingId(featureId2, votingId1))
+                _mapper.MapFeature(
+                    FeatureServiceTestUtils.GetDalFeatureWithVotingId(featureId1, votingId1, FeatureStatus.NotStarted)),
+                _mapper.MapFeature(
+                    FeatureServiceTestUtils.GetDalFeatureWithVotingId(featureId2, votingId1, FeatureStatus.NotStarted))
             };
             var actualFeatureBllDtos = _featureService.GetFeaturesForVoting(votingId1).Result.ToList();
 
             Assert.Equal(2, actualFeatureBllDtos.Count);
-            // Assert.Equal(expectedFeatureBllDtos, actualFeatureBllDtos);
+            Assert.Equal(expectedFeatureBllDtos[0].Id, actualFeatureBllDtos[0].Id);
+            Assert.Equal(expectedFeatureBllDtos[1].Id, actualFeatureBllDtos[1].Id);
         }
 
-        private FeatureDalDto GetDalFeatureWithVotingId(Guid featureId, Guid votingId)
+        [Fact]
+        public void TestGetToDoFeaturesNotInVotingReturnsOneOfFour()
         {
-            return new FeatureDalDto
+            var featureId1 = new Guid("00000000-0000-0000-0000-000000000001");
+            var featureId2 = new Guid("00000000-0000-0000-0000-000000000002");
+            var featureId3 = new Guid("00000000-0000-0000-0000-000000000003");
+            var votingId1 = new Guid("00000000-0000-0000-0000-000000000004");
+            var votingId2 = new Guid("00000000-0000-0000-0000-000000000005");
+
+            IEnumerable<FeatureDalDto> features = new List<FeatureDalDto>
             {
-                Id = featureId,
-                Title = "Test task",
-                CategoryId = new Guid("00000000-0000-0000-0000-000000000009"),
-                Category = new CategoryDalDto
-                {
-                    Id = new Guid("00000000-0000-0000-0000-000000000009"),
-                    Title = "Test category"
-                },
-                FeatureInVotings = new List<FeatureInVotingDalDto>
-                {
-                    new FeatureInVotingDalDto
-                    {
-                        Id = new Guid("00000000-0000-0000-0000-000000000077"),
-                        FeatureId = featureId,
-                        VotingId = votingId,
-                        Voting = new VotingDalDto
-                        {
-                            Id = votingId,
-                            Title = "Test voting",
-                            StartTime = DateTime.Parse("April 1, 2021"),
-                            EndTime = DateTime.Parse("May 1, 2021")
-                        }
-                    }
-                }
+                FeatureServiceTestUtils.GetDalFeatureWithVotingId(featureId1, votingId1, FeatureStatus.InReview),
+                FeatureServiceTestUtils.GetDalFeatureWithVotingId(featureId2, votingId1, FeatureStatus.NotStarted),
+                FeatureServiceTestUtils.GetDalFeatureWithVotingId(featureId3, votingId2, FeatureStatus.NotStarted),
+                FeatureServiceTestUtils.GetDalFeatureWithVotingId(featureId3, votingId2, FeatureStatus.InProgress)
             };
+            _repositoryMock.Setup(repo => repo.GetAll()).Returns(Task.FromResult(features));
+            var expectedFeature =
+                _mapper.MapFeature(
+                    FeatureServiceTestUtils.GetDalFeatureWithVotingId(featureId2, votingId1, FeatureStatus.NotStarted));
+
+            var actualFeatureBllDtos = _featureService.GetToDoFeaturesNotInVoting(votingId2).Result.ToList();
+
+            Assert.Single(actualFeatureBllDtos);
+            Assert.Equal(expectedFeature.Id, actualFeatureBllDtos[0].Id);
         }
 
-        private FeatureDalDto GetDalFeatureWithVotingStartAndEndTime(Guid featureId, Guid votingId, DateTime startDate, DateTime endDate)
+        [Fact]
+        public void TestGetFeaturesWithUsersPrioritiesReturnsBothFeaturesAlreadyVotedAndNotVoted()
         {
-            return new FeatureDalDto
+            var featureId1 = new Guid("00000000-0000-0000-0000-000000000001");
+            var featureId2 = new Guid("00000000-0000-0000-0000-000000000002");
+            var votingId1 = new Guid("00000000-0000-0000-0000-000000000004");
+            var featureInVotingId = new Guid("00000000-0000-0000-0000-000000000099");
+            var categoryId = new Guid("00000000-0000-0000-0000-000000000077");
+
+            var userPriorities = new List<UsersFeaturePriorityBllDto>
+            {
+                FeatureServiceTestUtils.GetFeaturePriority(featureInVotingId, featureId1, categoryId, votingId1)
+            };
+            IEnumerable<FeatureDalDto> allFeatures = new List<FeatureDalDto>
+            {
+                FeatureServiceTestUtils.GetDalFeatureWithVotingId(featureId1, votingId1, FeatureStatus.NotStarted),
+                FeatureServiceTestUtils.GetDalFeatureWithVotingId(featureId2, votingId1, FeatureStatus.NotStarted)
+            };
+            _repositoryMock.Setup(repo => repo.GetAll()).Returns(Task.FromResult(allFeatures));
+
+            var expectedFeatureBllDtos = new List<FeatureWithUsersPriorityBllDto>
+            {
+                FeatureServiceTestUtils.GetFeatureWithUsersPriority(featureId1, votingId1, 2, 1, 2, 1),
+                FeatureServiceTestUtils.GetFeatureWithUsersPriority(featureId2, votingId1, 0, 0, 0, 0)
+            };
+
+            var actualFeatureBllDtos =
+                _featureService.GetFeaturesWithUsersPriorities(userPriorities, votingId1).Result.ToList();
+            Assert.Equal(expectedFeatureBllDtos, actualFeatureBllDtos);
+        }
+
+        [Fact]
+        public void TestConstructEditedFeatureWithChangeLog()
+        {
+            var featureId = new Guid("00000000-0000-0000-0000-000000000001");
+            var bllFeature = FeatureServiceTestUtils.GetBllFeature(featureId);
+            var apiFeature = FeatureServiceTestUtils.GetApiFeature(featureId);
+            var bllCategory = FeatureServiceTestUtils.GetBllCategory();
+
+            var expectedBllFeatureWithChangeLog = new FeatureBllDto
             {
                 Id = featureId,
-                Title = "Test task",
+                Title = "Changed task",
                 CategoryId = new Guid("00000000-0000-0000-0000-000000000051"),
-                FeatureInVotings = new List<FeatureInVotingDalDto>
-                {
-                    new FeatureInVotingDalDto
-                    {
-                        Id = new Guid("00000000-0000-0000-0000-000000000031"),
-                        FeatureId = featureId,
-                        VotingId = votingId,
-                        Voting = new VotingDalDto
-                        {
-                            Id = votingId,
-                            Title = "Test voting",
-                            StartTime = startDate,
-                            EndTime = endDate
-                        }
-                    }
-                }
+                StartTime = DateTime.Parse("March 1, 2021"),
+                EndTime = DateTime.Parse("March 15, 2021"),
+                Duration = 14,
+                FeatureStatus = FeatureStatus.InProgress,
+                TimeCreated = DateTime.Parse("January 1, 2021"),
+                LastEdited = DateTime.Now,
+                ChangeLog = "\\n" + DateTime.Now.ToString("dd.MM.yyyy HH:mm") + 
+                            " tester changed title from 'Test task' to 'Changed task'." + 
+                            "\\n" + DateTime.Now.ToString("dd.MM.yyyy HH:mm") + 
+                            " tester changed end date from '14.03.2021 00:00' to '15.03.2021 00:00'." +
+                            "\\n" + DateTime.Now.ToString("dd.MM.yyyy HH:mm") + 
+                            " tester changed duration from '13' to '14' days."
             };
-        }
-        
-        private FeatureDalDto GetDalFeatureWithManyFeatureInVotings(Guid featureId)
-        {
-            var featureInVotings = new List<FeatureInVotingDalDto>
-            {
-                GetFeatureInVotingDalDto(featureId, DateTime.Parse("April 1, 2021")),
-                GetFeatureInVotingDalDto(featureId, DateTime.MaxValue),
-                GetFeatureInVotingDalDto(featureId, DateTime.Parse("March 15, 2020"))
-            };
-            
-            return new FeatureDalDto
-            {
-                Id = featureId,
-                Title = "Test task",
-                CategoryId = new Guid("00000000-0000-0000-0000-000000000011"),
-                FeatureInVotings = featureInVotings
-            };
-        }
-        
-        private FeatureInVotingDalDto GetFeatureInVotingDalDto(Guid featureId, DateTime votingEndTime)
-        {
-            var votingId = new Guid("00000000-0000-0000-0000-000000000033");
-            
-            return new FeatureInVotingDalDto
-            {
-                Id = new Guid("00000000-0000-0000-0000-000000000044"),
-                FeatureId = featureId,
-                VotingId = votingId,
-                Voting = new VotingDalDto
-                {
-                    Id = votingId,
-                    Title = "Test voting",
-                    StartTime = DateTime.Parse("March 1, 2020"),
-                    EndTime = votingEndTime
-                }
-            };
+            var actualBllFeatureWithChangeLog =
+                _featureService.ConstructEditedFeatureWithChangeLog(bllFeature, apiFeature, "tester", bllCategory,
+                    null);
+            Assert.Equal(expectedBllFeatureWithChangeLog.ChangeLog, actualBllFeatureWithChangeLog.ChangeLog);
         }
     }
 }

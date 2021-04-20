@@ -71,14 +71,6 @@ namespace BLL.App.Services
             }
         }
 
-        private decimal CalculatePriorityUsingWSJF(int taskSize, int businessValue, int timeCriticality, int riskOrOpportunity)
-        {
-            var priceOfDelay = Convert.ToDecimal(businessValue) + Convert.ToDecimal(timeCriticality) +
-                               Convert.ToDecimal(riskOrOpportunity);
-            var WSJF = priceOfDelay / Convert.ToDecimal(taskSize);
-            return decimal.Round(WSJF, 2);
-        }
-
         public async Task<IEnumerable<UsersFeaturePriorityBllDto>> GetAllForFeatureAndVoting(Guid featureId, Guid votingId)
         {
             return (await ServiceRepository.GetAllForFeatureAndVoting(featureId, votingId))
@@ -99,6 +91,14 @@ namespace BLL.App.Services
         public async Task<UsersFeaturePriorityBllDto> FirstOrDefaultForUserAndFeatureInVoting(Guid userId, Guid featureInVotingId)
         {
             return _mapper.Map(await ServiceRepository.FirstOrDefaultForUserAndFeatureInVoting(userId, featureInVotingId));
+        }
+        
+        private decimal CalculatePriorityUsingWSJF(int taskSize, int businessValue, int timeCriticality, int riskOrOpportunity)
+        {
+            var priceOfDelay = Convert.ToDecimal(businessValue) + Convert.ToDecimal(timeCriticality) +
+                               Convert.ToDecimal(riskOrOpportunity);
+            var WSJF = priceOfDelay / Convert.ToDecimal(taskSize);
+            return decimal.Round(WSJF, 2);
         }
     }
 }
