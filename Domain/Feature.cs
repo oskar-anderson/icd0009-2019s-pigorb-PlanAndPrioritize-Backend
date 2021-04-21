@@ -15,6 +15,7 @@ namespace Domain
         
         public int Size { get; set; }
 
+        [Column(TypeName = "decimal(5,2)")]
         public decimal PriorityValue { get; set; }
 
         public string? Description { get; set; }

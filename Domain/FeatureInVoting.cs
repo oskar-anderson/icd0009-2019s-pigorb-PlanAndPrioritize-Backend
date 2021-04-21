@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
 
 namespace Domain
@@ -8,14 +9,19 @@ namespace Domain
     {
         public Guid Id { get; set; }
 
+        [Column(TypeName = "decimal(5,2)")]
         public decimal AverageBusinessValue { get; set; }
         
+        [Column(TypeName = "decimal(5,2)")]
         public decimal AverageTimeCriticality { get; set; }
         
+        [Column(TypeName = "decimal(5,2)")]
         public decimal AverageRiskOrOpportunity { get; set; }
         
+        [Column(TypeName = "decimal(5,2)")]
         public decimal AverageSize { get; set; }
         
+        [Column(TypeName = "decimal(5,2)")]
         public decimal AveragePriorityValue { get; set; }
 
         public Guid VotingId { get; set; }

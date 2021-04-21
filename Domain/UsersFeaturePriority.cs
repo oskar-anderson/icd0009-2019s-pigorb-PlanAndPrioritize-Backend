@@ -1,5 +1,5 @@
 using System;
-using Classifiers;
+using System.ComponentModel.DataAnnotations.Schema;
 using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
 
 namespace Domain
@@ -16,6 +16,7 @@ namespace Domain
         
         public int Size { get; set; }
         
+        [Column(TypeName = "decimal(5,2)")]
         public decimal PriorityValue { get; set; }
 
         public Guid AppUserId { get; set; }

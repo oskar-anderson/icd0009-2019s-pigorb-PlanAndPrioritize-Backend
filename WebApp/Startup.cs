@@ -40,10 +40,9 @@ namespace WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppDbContext>(options =>
-                // To switch database later
-                // options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")
-                options.UseSqlite(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                // To switch database
+                // options.UseSqlServer(Configuration.GetConnectionString("SqlServerConnection")));
+                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             
             // add as a scoped dependency
             services.AddScoped<IUserNameProvider, UserNameProvider>();

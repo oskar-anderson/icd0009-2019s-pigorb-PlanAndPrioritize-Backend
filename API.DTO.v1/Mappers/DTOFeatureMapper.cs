@@ -97,10 +97,16 @@ namespace API.DTO.v1.Mappers
                 EndDate = bllEntity.EndTime,
                 Label = bllEntity.Title
             };
+            var title = bllEntity.Title;
+            if (title.Length > 15)
+            {
+                title = title.Substring(0, 15) + "...";
+            }
+
             return new FeatureForGraphApiDto
             {
                 Id = bllEntity.Id,
-                Title = bllEntity.Title,
+                Title = title,
                 CategoryName = bllEntity.Category!.Title,
                 FeatureStatus = MapFeatureStatus(bllEntity.FeatureStatus),
                 Bars = new List<TimeBarApiDto> { timeBar }
