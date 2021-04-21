@@ -5,7 +5,7 @@ using BLL.App.DTO;
 using Classifiers;
 using DAL.App.DTO;
 
-namespace Tests.Services
+namespace Tests.Util
 {
     public static class FeatureServiceTestUtils
     {
@@ -156,7 +156,7 @@ namespace Tests.Services
                 }
             };
         }
-        
+
         public static FeatureBllDto GetBllFeature(Guid featureId)
         {
             return new FeatureBllDto
@@ -172,7 +172,7 @@ namespace Tests.Services
                 LastEdited = DateTime.Parse("January 1, 2021")
             };
         }
-        
+
         public static FeatureEditApiDto GetApiFeature(Guid featureId)
         {
             return new FeatureEditApiDto
@@ -186,7 +186,7 @@ namespace Tests.Services
             };
         }
 
-        public static CategoryBllDto GetBllCategory() 
+        public static CategoryBllDto GetBllCategory()
         {
             return new CategoryBllDto
             {

@@ -10,7 +10,6 @@ using Contracts.DAL.App;
 using Contracts.DAL.App.Repositories;
 using DAL.App.DTO;
 using ee.itcollege.pigorb.bookswap.BLL.Base.Services;
-using Microsoft.VisualBasic;
 
 namespace BLL.App.Services
 {

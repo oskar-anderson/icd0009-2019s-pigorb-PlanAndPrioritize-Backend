@@ -39,13 +39,15 @@ namespace DAL.App.EF.Repositories
             return await features.ToListAsync();
         }
         
-        public IEnumerable<FeatureDalDto> GetAllWithVotings(string? search)
+        public IEnumerable<FeatureDalDto> GetAllWithVotings(string? search, int limit)
         {
             var featuresQuery = RepoDbSet
                 .Include(f => f.Category)
                 .Include(f => f.AppUser)
                 .Include(f => f.FeatureInVotings)
                     .ThenInclude(fv => fv.Voting)
+                .OrderByDescending(f => f.TimeCreated)
+                .Take(limit)
                 .Select(dbEntity => _mapper.MapFeature(dbEntity))
                 .AsNoTracking()
                 .AsQueryable();
@@ -59,12 +61,13 @@ namespace DAL.App.EF.Repositories
             return newQuery;
         }
         
-        public async Task<IEnumerable<FeatureDalDto>> GetFeaturesForGraph()
+        public async Task<IEnumerable<FeatureDalDto>> GetFeaturesForGraph(int limit)
         {
             var features = RepoDbSet
                 .Include(f => f.Category)
                 .Where(f => f.StartTime != null && f.EndTime != null)
                 .OrderByDescending(f => f.TimeCreated)
+                .Take(limit)
                 .Select(dbEntity => _mapper.Map(dbEntity))
                 .AsNoTracking();
             return await features.ToListAsync();

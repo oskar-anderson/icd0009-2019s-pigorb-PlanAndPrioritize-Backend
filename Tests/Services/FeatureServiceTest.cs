@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using API.DTO.v1;
 using BLL.App.DTO;
 using BLL.App.DTO.Mappers;
 using BLL.App.Services;
@@ -11,6 +10,7 @@ using Contracts.DAL.App;
 using Contracts.DAL.App.Repositories;
 using DAL.App.DTO;
 using Moq;
+using Tests.Util;
 using Xunit;
 
 namespace Tests.Services
@@ -115,6 +115,7 @@ namespace Tests.Services
             var actualFeatureBllDtos = _featureService.GetFeaturesForVoting(votingId1).Result.ToList();
 
             Assert.Equal(2, actualFeatureBllDtos.Count);
+            // Assert Equals can't assert objects with so any nested levels
             Assert.Equal(expectedFeatureBllDtos[0].Id, actualFeatureBllDtos[0].Id);
             Assert.Equal(expectedFeatureBllDtos[1].Id, actualFeatureBllDtos[1].Id);
         }
@@ -143,6 +144,7 @@ namespace Tests.Services
             var actualFeatureBllDtos = _featureService.GetToDoFeaturesNotInVoting(votingId2).Result.ToList();
 
             Assert.Single(actualFeatureBllDtos);
+            // Assert Equals can't assert objects with so any nested levels
             Assert.Equal(expectedFeature.Id, actualFeatureBllDtos[0].Id);
         }
 
@@ -196,11 +198,11 @@ namespace Tests.Services
                 FeatureStatus = FeatureStatus.InProgress,
                 TimeCreated = DateTime.Parse("January 1, 2021"),
                 LastEdited = DateTime.Now,
-                ChangeLog = "\\n" + DateTime.Now.ToString("dd.MM.yyyy HH:mm") + 
-                            " tester changed title from 'Test task' to 'Changed task'." + 
-                            "\\n" + DateTime.Now.ToString("dd.MM.yyyy HH:mm") + 
+                ChangeLog = "\\n" + DateTime.Now.ToString("dd.MM.yyyy HH:mm") +
+                            " tester changed title from 'Test task' to 'Changed task'." +
+                            "\\n" + DateTime.Now.ToString("dd.MM.yyyy HH:mm") +
                             " tester changed end date from '14.03.2021 00:00' to '15.03.2021 00:00'." +
-                            "\\n" + DateTime.Now.ToString("dd.MM.yyyy HH:mm") + 
+                            "\\n" + DateTime.Now.ToString("dd.MM.yyyy HH:mm") +
                             " tester changed duration from '13' to '14' days."
             };
             var actualBllFeatureWithChangeLog =

@@ -93,12 +93,22 @@ namespace BLL.App.Services
             return _mapper.Map(await ServiceRepository.FirstOrDefaultForUserAndFeatureInVoting(userId, featureInVotingId));
         }
         
-        private decimal CalculatePriorityUsingWSJF(int taskSize, int businessValue, int timeCriticality, int riskOrOpportunity)
+        public decimal CalculatePriorityUsingWSJF(int taskSize, int businessValue, int timeCriticality, int riskOrOpportunity)
         {
             var priceOfDelay = Convert.ToDecimal(businessValue) + Convert.ToDecimal(timeCriticality) +
                                Convert.ToDecimal(riskOrOpportunity);
-            var WSJF = priceOfDelay / Convert.ToDecimal(taskSize);
-            return decimal.Round(WSJF, 2);
+            decimal wsjf;
+            // UI won't allow 0 for size value but just to be sure
+            if (taskSize == 0)
+            {
+                wsjf = priceOfDelay;
+            }
+            else
+            {
+                wsjf = priceOfDelay / Convert.ToDecimal(taskSize);
+            }
+            
+            return decimal.Round(wsjf, 2);
         }
     }
 }

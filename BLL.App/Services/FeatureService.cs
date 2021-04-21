@@ -28,9 +28,9 @@ namespace BLL.App.Services
             return (await ServiceRepository.GetAll()).Select(dalEntity => _mapper.Map(dalEntity));
         }
 
-        public IEnumerable<FeatureBllDto> GetAllWithVotings(string? search)
+        public IEnumerable<FeatureBllDto> GetAllWithVotings(string? search, int limit)
         {
-            var features = ServiceRepository.GetAllWithVotings(search).Select(dalEntity => _mapper.Map(dalEntity)).ToList();
+            var features = ServiceRepository.GetAllWithVotings(search, limit).Select(dalEntity => _mapper.Map(dalEntity)).ToList();
             foreach (var feature in features)
             {
                 if (feature.FeatureInVotings == null) continue;
@@ -46,9 +46,9 @@ namespace BLL.App.Services
             return features;
         }
 
-        public async Task<IEnumerable<FeatureBllDto>> GetFeaturesForGraph()
+        public async Task<IEnumerable<FeatureBllDto>> GetFeaturesForGraph(int limit)
         {
-            return (await ServiceRepository.GetFeaturesForGraph()).Select(dalEntity => _mapper.Map(dalEntity));
+            return (await ServiceRepository.GetFeaturesForGraph(limit)).Select(dalEntity => _mapper.Map(dalEntity));
         }
 
         public async Task<IEnumerable<FeatureBllDto>> GetToDoFeatures()

@@ -31,22 +31,22 @@ namespace WebApp.ApiControllers._1._0
             _pMapper = new DTOUsersFeaturePriorityMapper();
         }
 
-        [HttpGet("{search?}")]
-        public async Task<ActionResult<IEnumerable<FeatureApiDto>>> GetFeaturesForList(string? search)
+        [HttpGet("{limit}/{search?}")]
+        public async Task<ActionResult<IEnumerable<FeatureApiDto>>> GetFeaturesForList(int limit, string? search)
         {
-            await _bll.Features.UpdatePriorityForAllFeatures(); // Limit to some amount of features?
+            await _bll.Features.UpdatePriorityForAllFeatures();
             await _bll.SaveChangesAsync();
             
-            var features = _bll.Features.GetAllWithVotings(search)
+            var features = _bll.Features.GetAllWithVotings(search, limit)
                 .Select(bllEntity => _mapper.MapFeature(bllEntity));
             
             return Ok(features);
         }
         
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<FeatureForGraphApiDto>>> GetFeaturesForGraph()
+        [HttpGet("{limit}")]
+        public async Task<ActionResult<IEnumerable<FeatureForGraphApiDto>>> GetFeaturesForGraph(int limit)
         {
-            var features = (await _bll.Features.GetFeaturesForGraph())
+            var features = (await _bll.Features.GetFeaturesForGraph(limit))
                 .Select(bllEntity => _mapper.MapFeatureForGraph(bllEntity));
             
             return Ok(features);
