@@ -1,5 +1,4 @@
 using System;
-using Classifiers;
 using ee.itcollege.pigorb.bookswap.Contracts.DAL.Base;
 
 namespace DAL.App.DTO
