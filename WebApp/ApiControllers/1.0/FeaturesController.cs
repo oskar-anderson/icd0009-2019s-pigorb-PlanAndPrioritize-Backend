@@ -142,28 +142,6 @@ namespace WebApp.ApiControllers._1._0
         }
         
         /// <summary>
-        /// Get features that are added to voting with specified id
-        /// If features already have priority values they will be included
-        /// </summary>
-        /// <param name="id">Voting id - Guid</param>
-        /// <returns>Collection of features</returns>
-        /// <response code="200">Features were successfully retrieved.</response>
-        /// <response code="401">Not authorized to request data.</response>
-        [ProducesResponseType( typeof( IEnumerable<FeatureApiDto> ), 200)]
-        [ProducesResponseType( 401 )]
-        [Produces( "application/json" )]
-        [Consumes("application/json")]
-        [HttpGet("{id}")]
-        [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<FeatureApiDto>>> GetFeaturesWithPriority(Guid id)
-        {
-            var features = (await _bll.Features.GetFeaturesForVoting(id))
-                .Select(bllEntity => _mapper.MapFeature(bllEntity));
-            
-            return Ok(features);
-        }
-        
-        /// <summary>
         /// Get features with priority values added by logged in user for specific voting
         /// </summary>
         /// <param name="votingId">Voting id - Guid</param>
