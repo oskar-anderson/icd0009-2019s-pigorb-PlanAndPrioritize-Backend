@@ -19,8 +19,6 @@ namespace API.DTO.v1
         public Guid VotingId { get; set; }
 
         public Guid FeatureId { get; set; }
-
-        // public ICollection<UsersFeaturePriorityApiDto>? UsersFeaturePriorities { get; set; }
     }
     
     public class FeatureInVotingCreateApiDto

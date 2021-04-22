@@ -27,29 +27,32 @@ namespace WebApp.ApiControllers._1._0.Identity
         /// <param name="userManager">User Manager</param>
         /// <param name="roleManager">Role Manager</param>
         /// <param name="logger">Logger</param>
-        public UserManagerController(UserManager<AppUser> userManager, 
+        public UserManagerController(UserManager<AppUser> userManager,
             RoleManager<AppRole> roleManager, ILogger<AccountController> logger)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _logger = logger;
         }
-        
+
         /// <summary>
-        /// Get registered AppUsers with roles.
+        /// Get registered users with roles.
         /// </summary>
-        /// <returns>Collection of AppUsers.</returns>
-        /// <response code="200">The AppUsers were successfully retrieved.</response>
+        /// <returns>Collection of users.</returns>
+        /// <response code="200">The users were successfully retrieved.</response>
         /// <response code="403">Not authorized to see data.</response>
         /// <response code="404">The AppUser object type does not exist.</response>
-        [ProducesResponseType( typeof( IEnumerable<AppUser> ), 200 )]
-        [ProducesResponseType( 404 )]
+        [ProducesResponseType(typeof(IEnumerable<UserIndexDto>), 200)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(404)]
+        [Produces("application/json")]
+        [Consumes("application/json")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "User, Admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserIndexDto>>> GetUsers()
         {
             var userEmailsWithRoles = new Dictionary<string, string>();
-            
+
             foreach (var user in _userManager.Users)
             {
                 var roles = new List<string>();
@@ -60,23 +63,36 @@ namespace WebApp.ApiControllers._1._0.Identity
                         roles.Add(role.Name);
                     }
                 }
+
                 var rolesAsString = string.Join(", ", roles);
                 userEmailsWithRoles[user.Email] = rolesAsString;
             }
-            
+
             var users = _userManager.Users.AsQueryable();
 
             return await users.Select(user => new UserIndexDto
-                {
-                    Id = user.Id,
-                    Email = user.Email,
-                    FirstLastName = user.FirstName + " " + user.LastName,
-                    Roles = userEmailsWithRoles[user.Email]
-                }).ToListAsync();
+            {
+                Id = user.Id,
+                Email = user.Email,
+                FirstLastName = user.FirstName + " " + user.LastName,
+                Roles = userEmailsWithRoles[user.Email]
+            }).ToListAsync();
         }
 
-        [HttpGet]
+        /// <summary>
+        /// Get roles
+        /// </summary>
+        /// <returns>Collection of roles</returns>
+        /// <response code="200">The roles were successfully retrieved.</response>
+        /// <response code="403">Not authorized to see data.</response>
+        /// <response code="404">The AppRole object type does not exist.</response>
+        [ProducesResponseType(typeof(IEnumerable<RoleDto>), 200)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(404)]
+        [Produces("application/json")]
+        [Consumes("application/json")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<RoleDto>>> GetRoles()
         {
             var roles = _roleManager.Roles.AsQueryable();
@@ -87,9 +103,22 @@ namespace WebApp.ApiControllers._1._0.Identity
             }).ToListAsync();
         }
 
-        [HttpPost]
+        /// <summary>
+        /// Create new user with role
+        /// </summary>
+        /// <param name="model">New user data</param>
+        /// <returns>Action result</returns>
+        /// <response code="200">The user was successfully created.</response>
+        /// <response code="403">Not authorized to perform action.</response>
+        /// <response code="404">Role was not found.</response>
+        [ProducesResponseType(200)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(404)]
+        [Produces("application/json")]
+        [Consumes("application/json")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
-        public async Task<ActionResult<AppUser>> CreateUser(UserCreateDto model)
+        [HttpPost]
+        public async Task<ActionResult> CreateUser(UserCreateDto model)
         {
             var role = await _roleManager.FindByNameAsync(model.RoleName);
 
@@ -133,9 +162,20 @@ namespace WebApp.ApiControllers._1._0.Identity
             return StatusCode(403);
         }
 
-        [HttpPost]
+        /// <summary>
+        /// Create a new role
+        /// </summary>
+        /// <param name="model">Role data</param>
+        /// <returns>Action result</returns>
+        /// <response code="200">The role was successfully created.</response>
+        /// <response code="403">Not authorized to perform action.</response>
+        [ProducesResponseType(200)]
+        [ProducesResponseType(403)]
+        [Produces("application/json")]
+        [Consumes("application/json")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
-        public async Task<ActionResult<AppUser>> CreateRole(RoleDto model)
+        [HttpPost]
+        public async Task<ActionResult> CreateRole(RoleDto model)
         {
             var role = new AppRole {Name = model.RoleName};
 
@@ -146,23 +186,38 @@ namespace WebApp.ApiControllers._1._0.Identity
             }
 
             var result = await _roleManager.CreateAsync(role);
-            
+
             if (!result.Succeeded)
             {
                 _logger.LogInformation("Role creation failed!");
                 return StatusCode(403);
             }
-            
+
             _logger.LogInformation($"Role {model.RoleName} created!");
             return Ok(result);
         }
-        
-        [HttpPost]
+
+        /// <summary>
+        /// Delete user
+        /// </summary>
+        /// <param name="userDeleteDTO">User data</param>
+        /// <returns>User deleted</returns>
+        /// <response code="200">User was successfully deleted.</response>
+        /// <response code="403">Not authorized to perform action.</response>
+        /// <response code="404">User not found.</response>
+        /// <response code="405">User deletion failed.</response>
+        [ProducesResponseType(typeof(AppUser), 200)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(405)]
+        [Produces("application/json")]
+        [Consumes("application/json")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        [HttpPost]
         public async Task<ActionResult<AppUser>> DeleteUser(UserDeleteDto userDeleteDTO)
         {
             var user = await _userManager.FindByEmailAsync(userDeleteDTO.Email);
-            
+
             foreach (var appUser in await _userManager.Users.ToListAsync())
             {
                 if (appUser.Id == user.Id)
@@ -176,15 +231,15 @@ namespace WebApp.ApiControllers._1._0.Identity
                     }
                 }
             }
-            
+
             if (user == null)
             {
                 _logger.LogInformation("User not found!");
                 return StatusCode(404);
             }
-            
+
             var result = await _userManager.DeleteAsync(user);
-            
+
             if (!result.Succeeded)
             {
                 _logger.LogInformation("User deleting failed!");
@@ -193,10 +248,25 @@ namespace WebApp.ApiControllers._1._0.Identity
 
             return Ok(user);
         }
-        
-        [HttpPost]
+
+        /// <summary>
+        /// Delete role
+        /// </summary>
+        /// <param name="roleDTO">Role data</param>
+        /// <returns>Deleted role</returns>
+        /// <response code="200">Role was successfully deleted.</response>
+        /// <response code="403">Not authorized to perform action.</response>
+        /// <response code="404">Role not found.</response>
+        /// <response code="405">Role deletion failed.</response>
+        [ProducesResponseType(typeof(AppRole), 200)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(405)]
+        [Produces("application/json")]
+        [Consumes("application/json")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
-        public async Task<ActionResult<AppUser>> DeleteRole(RoleDto roleDTO)
+        [HttpPost]
+        public async Task<ActionResult<AppRole>> DeleteRole(RoleDto roleDTO)
         {
             if (roleDTO.RoleName == null)
             {
@@ -205,15 +275,15 @@ namespace WebApp.ApiControllers._1._0.Identity
             }
 
             var role = await _roleManager.FindByNameAsync(roleDTO.RoleName);
-            
+
             if (role == null)
             {
                 _logger.LogInformation("Role not found!");
                 return StatusCode(404);
             }
-            
+
             var result = await _roleManager.DeleteAsync(role);
-            
+
             if (!result.Succeeded)
             {
                 _logger.LogInformation("Role deleting failed!");
@@ -222,10 +292,25 @@ namespace WebApp.ApiControllers._1._0.Identity
 
             return Ok(role);
         }
-        
-        [HttpPost]
+
+        /// <summary>
+        /// Add role to user
+        /// </summary>
+        /// <param name="userRoleDTO">User and role data</param>
+        /// <returns>Action result</returns>
+        /// <response code="200">Role was successfully added to user.</response>
+        /// <response code="403">Not authorized to perform action.</response>
+        /// <response code="404">User or role not found.</response>
+        /// <response code="405">Role adding to user failed.</response>
+        [ProducesResponseType(200)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(405)]
+        [Produces("application/json")]
+        [Consumes("application/json")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
-        public async Task<ActionResult<AppUser>> AddRoleToUser(UserRoleDto userRoleDTO)
+        [HttpPost]
+        public async Task<ActionResult> AddRoleToUser(UserRoleDto userRoleDTO)
         {
             var user = await _userManager.FindByEmailAsync(userRoleDTO.Email);
 
@@ -234,7 +319,7 @@ namespace WebApp.ApiControllers._1._0.Identity
                 _logger.LogInformation("User not found!");
                 return StatusCode(404);
             }
-            
+
             if (userRoleDTO.RoleName == null || await _roleManager.FindByNameAsync(userRoleDTO.RoleName) == null)
             {
                 _logger.LogInformation("Role not found!");
@@ -252,13 +337,28 @@ namespace WebApp.ApiControllers._1._0.Identity
             _logger.LogInformation($"Role {userRoleDTO.RoleName} added!");
             return Ok(result);
         }
-        
-        [HttpPost]
+
+        /// <summary>
+        /// Remove role from user
+        /// </summary>
+        /// <param name="userRoleDTO">User and role data</param>
+        /// <returns>Action result</returns>
+        /// <response code="200">Role was successfully removed from user.</response>
+        /// <response code="403">Not authorized to perform action.</response>
+        /// <response code="404">User or role not found.</response>
+        /// <response code="405">Role removing from user failed.</response>
+        [ProducesResponseType(200)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(405)]
+        [Produces("application/json")]
+        [Consumes("application/json")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        [HttpPost]
         public async Task<ActionResult<AppUser>> RemoveRoleFromUser(UserRoleDto userRoleDTO)
         {
             var user = await _userManager.FindByEmailAsync(userRoleDTO.Email);
-            
+
             if (user == null)
             {
                 _logger.LogInformation("User not found!");
@@ -272,13 +372,13 @@ namespace WebApp.ApiControllers._1._0.Identity
             }
 
             var result = await _userManager.RemoveFromRoleAsync(user, userRoleDTO.RoleName);
-            
+
             if (!result.Succeeded)
             {
                 _logger.LogInformation("Role can't be removed!");
                 return StatusCode(405);
             }
-            
+
             _logger.LogInformation($"Role {userRoleDTO.RoleName} remover!");
             return Ok(result);
         }
