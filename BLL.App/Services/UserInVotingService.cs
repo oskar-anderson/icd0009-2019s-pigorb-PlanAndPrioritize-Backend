@@ -54,6 +54,11 @@ namespace BLL.App.Services
             return await ServiceRepository.Exists(userId, votingId);
         }
 
+        public async Task<bool> HasAssignedOpenVotings(Guid userId)
+        {
+            return await ServiceRepository.HasAssignedOpenVotings(userId);
+        }
+
         public async Task<IEnumerable<UserInVotingDalDto>> GetAllForVoting(Guid votingId)
         {
             return await ServiceRepository.GetAllForVoting(votingId);

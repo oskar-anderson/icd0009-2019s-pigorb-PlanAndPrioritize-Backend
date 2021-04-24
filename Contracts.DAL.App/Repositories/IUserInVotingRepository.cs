@@ -17,6 +17,7 @@ namespace Contracts.DAL.App.Repositories
         Task<TDALEntity> FindUserInVoting(Guid userId, Guid votingId);
         
         Task<bool> Exists(Guid userId, Guid votingId);
+        Task<bool> HasAssignedOpenVotings(Guid userId);
         
         Task<IEnumerable<UserInVotingDalDto>> GetAllForVoting(Guid votingId);
     }

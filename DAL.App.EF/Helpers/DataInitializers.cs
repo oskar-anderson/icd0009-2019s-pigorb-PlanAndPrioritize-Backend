@@ -69,27 +69,6 @@ namespace DAL.App.EF.Helpers
                 }
             };
 
-            /***
-            var features = new Feature[]
-            {
-                new Feature
-                {
-                    Title = "Add new button to web shop", 
-                    Description = "New button is necessary for adding multiple items to cart", 
-                    TimeCreated = DateTime.Now, 
-                    LastEdited = DateTime.Now
-                },
-                new Feature
-                {
-                    
-                },
-                new Feature
-                {
-                    
-                }
-            };
-            */
-
             foreach (var category in categories)
             {
                 if (!context.Categories.Any(g => g.Id == category.Id))

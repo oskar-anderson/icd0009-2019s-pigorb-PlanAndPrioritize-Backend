@@ -206,6 +206,24 @@ namespace WebApp.ApiControllers._1._0
         }
         
         /// <summary>
+        /// Get boolean value if signed in user has priority votings assigned to him/her that are currently open for voting
+        /// during priority voting with specified id
+        /// </summary>
+        /// <returns>boolean</returns>
+        /// <response code="200">Boolean value was successfully retrieved.</response>
+        /// <response code="401">Not authorized to see the data.</response>
+        [ProducesResponseType( typeof( bool ), 200 )]
+        [ProducesResponseType( 401 )]
+        [Produces( "application/json" )]
+        [Consumes("application/json")]
+        [HttpGet]
+        public async Task<ActionResult<bool>> HasAssignedOpenVotings()
+        {
+            var hasAssignedOpenVotings = await _bll.UserInVotings.HasAssignedOpenVotings(User.UserId());
+            return Ok(hasAssignedOpenVotings);
+        }
+        
+        /// <summary>
         /// Update voting with specified id
         /// </summary>
         /// <param name="id">Voting id - Guid</param>

@@ -11,10 +11,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.App.EF.Repositories
 {
-    public class UserInVotingRepository : EFBaseRepository<AppDbContext, UserInVoting, UserInVotingDalDto>, IUserInVotingRepository
+    public class UserInVotingRepository : EFBaseRepository<AppDbContext, UserInVoting, UserInVotingDalDto>,
+        IUserInVotingRepository
     {
         private readonly DALUserInVotingMapper _mapper = new DALUserInVotingMapper();
-        
+
         public UserInVotingRepository(AppDbContext dbContext) : base(dbContext, new DALUserInVotingMapper())
         {
         }
@@ -39,6 +40,16 @@ namespace DAL.App.EF.Repositories
                 .Select(dbEntity => _mapper.Map(dbEntity))
                 .AsNoTracking();
             return await userInVotings.ToListAsync();
+        }
+
+        public async Task<bool> HasAssignedOpenVotings(Guid userId)
+        {
+            return await RepoDbSet
+                .Include(uv => uv.Voting)
+                .AnyAsync(uv => uv.AppUserId == userId &&
+                                uv.Voting!.StartTime < DateTime.Now
+                                && uv.Voting!.StartTime < DateTime.Now &&
+                                uv.Voting!.EndTime > DateTime.Now);
         }
     }
 }
