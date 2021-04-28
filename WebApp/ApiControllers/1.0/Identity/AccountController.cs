@@ -5,7 +5,6 @@ using Domain;
 using Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -20,10 +19,8 @@ namespace WebApp.ApiControllers._1._0.Identity
     {
         private readonly IConfiguration _configuration;
         private readonly UserManager<AppUser> _userManager;
-        private readonly RoleManager<AppRole> _roleManager;
         private readonly ILogger<AccountController> _logger;
         private readonly SignInManager<AppUser> _signInManager;
-        private readonly IAppBLL _bll;
 
         /// <summary>
         /// Constructor
@@ -42,8 +39,6 @@ namespace WebApp.ApiControllers._1._0.Identity
             _userManager = userManager;
             _logger = logger;
             _signInManager = signInManager;
-            _roleManager = roleManager;
-            _bll = bll;
         }
 
         /// <summary>
@@ -95,88 +90,6 @@ namespace WebApp.ApiControllers._1._0.Identity
 
             _logger.LogInformation($"Web-Api login. User {model.Email} attempted to log-in with bad password!");
             return NotFound(new MessageDto("User not found!"));
-        }
-
-        /// <summary>
-        /// Endpoint for user registration and immediate log-in (jwt generation) 
-        /// </summary>
-        /// <param name="model">user data</param>
-        /// <returns>Status Code (and IdentityResult in case of success)</returns>
-        /// <response code="200">User was successfully registered.</response>
-        /// <response code="400">Bad request.</response>
-        /// <response code="404">User with this email already exists.</response>
-        [HttpPost]
-        [Produces("application/json")]
-        [Consumes("application/json")]
-        [ProducesResponseType(200, Type = typeof(JwtResponseDto))]
-        [ProducesResponseType(400, Type = typeof(MessageDto))]
-        [ProducesResponseType(404, Type = typeof(MessageDto))]
-        public async Task<ActionResult<string>> Register([FromBody] RegisterDto model)
-        {
-            var role = await _roleManager.FindByNameAsync("User");
-
-            if (role == null)
-            {
-                role = new AppRole {Name = "User"};
-                var roleCreationResult = await _roleManager.CreateAsync(role);
-
-                if (!roleCreationResult.Succeeded)
-                {
-                    _logger.LogInformation("Role creation failed!");
-                    return BadRequest(new MessageDto("Role creation failed!"));
-                }
-            }
-
-            var userName = model.Email;
-            var passWord = model.Password;
-            var firstName = model.FirstName;
-            var lastName = model.LastName;
-
-            var user = await _userManager.FindByNameAsync(userName);
-
-            if (user != null)
-            {
-                _logger.LogInformation($"Username {model.Email} already exists! Choose another one");
-                return NotFound(new MessageDto("User with that username already registered!"));
-            }
-
-            user = new AppUser {Email = userName, UserName = userName, FirstName = firstName, LastName = lastName};
-
-            var result = await _userManager.CreateAsync(user, passWord);
-
-            if (!result.Succeeded)
-            {
-                _logger.LogInformation("User creation failed!");
-                return BadRequest(new MessageDto("User creation failed!"));
-            }
-
-            var roleResult = await _userManager.AddToRoleAsync(user, "User");
-            if (!roleResult.Succeeded)
-            {
-                _logger.LogInformation("Role adding failed!");
-                return BadRequest(new MessageDto("Role adding failed!"));
-            }
-
-            _logger.LogInformation($"User {user.Email} created a new account with password.");
-
-
-            var createdUser = await _userManager.FindByEmailAsync(user.Email);
-            if (createdUser != null)
-            {
-                var claimsPrincipal = await _signInManager.CreateUserPrincipalAsync(createdUser);
-                var jwt = IdentityExtensions.GenerateJWT(
-                    claimsPrincipal.Claims,
-                    _configuration["JWT:SigningKey"],
-                    _configuration["JWT:Issuer"],
-                    _configuration.GetValue<int>("JWT:ExpirationInDays")
-                );
-                _logger.LogInformation($"WebApi register. User {createdUser.Email} logged in.");
-                return Ok(new JwtResponseDto()
-                    {Token = jwt, Status = $"User {createdUser.Email} created and logged in."});
-            }
-
-            _logger.LogInformation($"User {user.Email} not found after creation!");
-            return BadRequest(new MessageDto("User not found after creation!"));
         }
 
         /// <summary>
