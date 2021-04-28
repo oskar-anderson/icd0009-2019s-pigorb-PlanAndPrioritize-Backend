@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.DTO.v1.Identity;
 using API.DTO.v1.UserManager;
 using Domain;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -381,6 +382,44 @@ namespace WebApp.ApiControllers._1._0.Identity
 
             _logger.LogInformation($"Role {userRoleDTO.RoleName} remover!");
             return Ok(result);
+        }
+        
+        /// <summary>
+        /// Reset user password without knowing old password 
+        /// </summary>
+        /// <param name="model">User data with new password</param>
+        /// <returns>Action result</returns>
+        /// <response code="200">Password was successfully changed.</response>
+        /// <response code="400">Bad request.</response>
+        /// <response code="404">User for this email was not found.</response>
+        [HttpPost]
+        [Produces("application/json")]
+        [Consumes("application/json")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        public async Task<ActionResult> ResetPassword(ResetPasswordDto model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                _logger.LogInformation($"Web-Api password reset attempt. User {model.Email} not found!");
+                return NotFound();
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, token, model.Password);
+            
+            if (result.Succeeded)
+            {
+                _logger.LogInformation($"Password reset for user {model.Email}.");
+                await _userManager.RemoveLoginAsync(user, "PlanAndPrioritize", user.Email);
+                return Ok();
+            }
+
+            _logger.LogInformation($"Password reset for user {user.Email} failed!");
+            return BadRequest();
         }
     }
 }

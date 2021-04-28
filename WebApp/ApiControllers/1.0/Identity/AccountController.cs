@@ -3,6 +3,8 @@ using API.DTO.v1.Identity;
 using Contracts.BLL.App;
 using Domain;
 using Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -54,8 +56,8 @@ namespace WebApp.ApiControllers._1._0.Identity
         [HttpPost]
         [Produces("application/json")]
         [Consumes("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(JwtResponseDto))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(MessageDto))]
+        [ProducesResponseType(200, Type = typeof(JwtResponseDto))]
+        [ProducesResponseType(404, Type = typeof(MessageDto))]
         public async Task<ActionResult<string>> Login([FromBody] LoginDto model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
@@ -106,9 +108,9 @@ namespace WebApp.ApiControllers._1._0.Identity
         [HttpPost]
         [Produces("application/json")]
         [Consumes("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(JwtResponseDto))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(MessageDto))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(MessageDto))]
+        [ProducesResponseType(200, Type = typeof(JwtResponseDto))]
+        [ProducesResponseType(400, Type = typeof(MessageDto))]
+        [ProducesResponseType(404, Type = typeof(MessageDto))]
         public async Task<ActionResult<string>> Register([FromBody] RegisterDto model)
         {
             var role = await _roleManager.FindByNameAsync("User");
@@ -188,9 +190,10 @@ namespace WebApp.ApiControllers._1._0.Identity
         [HttpPost]
         [Produces("application/json")]
         [Consumes("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(MessageDto))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(MessageDto))]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400, Type = typeof(MessageDto))]
+        [ProducesResponseType(404, Type = typeof(MessageDto))]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<string>> ChangePassword([FromBody] PasswordDto model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
